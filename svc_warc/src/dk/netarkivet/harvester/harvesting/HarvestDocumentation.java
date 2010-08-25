@@ -185,9 +185,7 @@ public class HarvestDocumentation {
             if (arcFilesDir.isDirectory()) {
                 moveAwayForeignFiles(arcFilesDir, jobID);
                 //Generate CDX
-                // TODO: Place r
-                //
-                // esults in IngestableFiles-defined area
+                // TODO: Place results in IngestableFiles-defined area
                 File cdxFilesDir = FileUtils.createUniqueTempDir(crawlDir,
                                                                  "cdx");
                 CDXUtils.generateCDX(arcFilesDir, cdxFilesDir);
@@ -334,23 +332,25 @@ public class HarvestDocumentation {
      *
      * @param dir A directory containing one or more ARC files.
      * @param jobID ID of the job whose directory we're in.
-     * @throws UnknownID If ?????????????????????????????????????
      */
-    private static void moveAwayForeignFiles(File dir, long jobID)
-        throws UnknownID {
+    private static void moveAwayForeignFiles(File dir, long jobID) {
         File[] arcFiles = dir.listFiles(FileUtils.ARCS_FILTER);
+        File[] warcFiles = dir.listFiles(FileUtils.WARCS_FILTER);
+        
         File oldJobsDir = new File(
                 Settings.get(HarvesterSettings.HARVEST_CONTROLLER_OLDJOBSDIR));
         File unknownJobDir = new File(oldJobsDir,
                 "lost-files-" + new Date().getTime());
         List<File> movedFiles = new ArrayList<File>();
+        
         for (File arcFile : arcFiles) {
             long foundJobID = -1;
             try {
                 FileUtils.FilenameParser parser = new FilenameParser(arcFile);
                 foundJobID = Long.parseLong(parser.getJobID());
             } catch (UnknownID e) {
-                // Non-Heritrix-generated ARC file
+                // Non-Heritrix-generated ARC file, but the metadata arcfile 
+                // created by our code.
                 Matcher matcher =
                     metadataFilenamePattern.matcher(arcFile.getName());
                 if (matcher.matches()) {

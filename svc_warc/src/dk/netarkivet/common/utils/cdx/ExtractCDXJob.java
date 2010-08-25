@@ -30,12 +30,11 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.archive.io.ArchiveRecord;
 import org.archive.io.arc.ARCRecord;
 
 import dk.netarkivet.common.exceptions.IOFailure;
 import dk.netarkivet.common.utils.MD5;
-import dk.netarkivet.common.utils.arc.ARCBatchJob;
-import dk.netarkivet.common.utils.batch.ARCBatchFilter;
 import dk.netarkivet.common.Constants;
 
 
@@ -46,7 +45,7 @@ import dk.netarkivet.common.Constants;
  * optionally a checksum.
  * See http://www.archive.org/web/researcher/cdx_file_format.php
  */
-public class ExtractCDXJob extends ARCBatchJob {
+public class ExtractCDXJob extends ArchiveBatchJob {
 
     /** An encoding for the standard included metadata fields without
      * checksum.*/
@@ -94,9 +93,9 @@ public class ExtractCDXJob extends ARCBatchJob {
      * @return The filter that defines what ARC records are wanted
      * in the output CDX file.
      */
-    public ARCBatchFilter getFilter() {
+    public ArchiveBatchFilter getFilter() {
         //Per default we want to index all records except ARC file headers:
-        return ARCBatchFilter.EXCLUDE_FILE_HEADERS;
+        return ArchiveBatchFilter.EXCLUDE_FILE_HEADERS;
     }
 
     /**
@@ -111,7 +110,13 @@ public class ExtractCDXJob extends ARCBatchJob {
      * ARCRecord, OutputStream)
      * @throws IOFailure on trouble reading arc record data
      */
-    public void processRecord(ARCRecord sar, OutputStream os) {
+    public void processRecord(ArchiveRecord ar, OutputStream os) {
+        if (!(ar instanceof ARCRecord)) {
+            log.warn("Skipped handling wrong type of ArchiveRecord. Expected ARCRecord. Was " 
+                    + ar.getClass().getName());
+            return;
+        }
+        ARCRecord sar = (ARCRecord) ar;
         log.trace("Processing ARCRecord with offset: " + sar.getMetaData().getOffset());
         /*
         * Fields are stored in a map so that it's easy

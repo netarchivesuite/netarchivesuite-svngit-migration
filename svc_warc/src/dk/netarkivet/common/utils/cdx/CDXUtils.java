@@ -55,8 +55,20 @@ public class CDXUtils {
      * @param cdxstream An output stream to add CDX lines to
      */
     public static void writeCDXInfo(File arcfile, OutputStream cdxstream) {
-        ExtractCDXJob job = new ExtractCDXJob();
-        BatchLocalFiles runner = new BatchLocalFiles(new File [] {arcfile});
+        ArgumentNotValid.checkNotNull(arcfile, "File arcfile");
+        String filename = arcfile.getName();
+        ArchiveBatchJob job = null;
+        if (filename.toLowerCase().matches(".*" + FileUtils.ARC_PATTERN)) {
+            job = new ExtractCDXJob();
+        } else if (filename.toLowerCase().matches(".*" + FileUtils.WARC_PATTERN)) {
+            job = new ExtractCDXFromWarcJob();
+        } else {
+            log.warn("Skipped file '" + arcfile.getAbsolutePath() 
+                    + "'. Is neither warc or arc file.");
+            return;
+        }
+
+        BatchLocalFiles runner = new BatchLocalFiles(new File[] {arcfile});
         runner.run(job, cdxstream);
         log.trace("Created index for " + job.noOfRecordsProcessed()
                      + " records on file '" + arcfile + "'");
