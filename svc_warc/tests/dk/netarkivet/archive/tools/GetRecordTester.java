@@ -31,6 +31,8 @@ import java.io.PrintStream;
 import java.util.HashMap;
 
 import junit.framework.TestCase;
+
+import org.archive.io.ArchiveRecord;
 import org.archive.io.arc.ARCConstants;
 import org.archive.io.arc.ARCRecord;
 import org.archive.io.arc.ARCRecordMetaData;
@@ -152,9 +154,9 @@ public class GetRecordTester extends TestCase {
                 GetMessage m = (GetMessage) nmsg;
                 if ((arcFileName.equals(m.getArcFile()))
                         && (offset == m.getIndex())) {
-                    m.setRecord(new BitarchiveRecord(myRec));
+                    m.setRecord(new BitarchiveRecord((ArchiveRecord) myRec, m.getArcFile()));
                 } else {
-                    m.setRecord(new BitarchiveRecord(null));
+                    m.setRecord(new BitarchiveRecord(null, ""));
                 }
                 JMSConnectionFactory.getInstance().reply(m);
             }

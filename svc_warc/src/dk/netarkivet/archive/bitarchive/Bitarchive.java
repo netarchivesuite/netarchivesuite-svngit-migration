@@ -31,6 +31,9 @@ import java.util.Date;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.archive.io.ArchiveReader;
+import org.archive.io.ArchiveReaderFactory;
+import org.archive.io.ArchiveRecord;
 import org.archive.io.arc.ARCReader;
 import org.archive.io.arc.ARCReaderFactory;
 import org.archive.io.arc.ARCRecord;
@@ -117,8 +120,8 @@ public class Bitarchive {
             log.debug("Get request for file not on this machine: " + arcfile);
             return null;
         }
-        ARCReader arcReader = null;
-        ARCRecord arc = null;
+        ArchiveReader archiveReader = null;
+        ArchiveRecord arc = null;
         try {
             if ((barc.getSize() <= index) || (index < 0)) {
                 String s = "GET: index out of bounds: " + arcfile + ":" + index
@@ -127,9 +130,9 @@ public class Bitarchive {
                 throw new ArgumentNotValid(s);
             }
             File in = barc.getFilePath();
-            arcReader = ARCReaderFactory.get(in);
-            arc = (ARCRecord) arcReader.get(index);
-            BitarchiveRecord result = new BitarchiveRecord(arc);
+            archiveReader = ArchiveReaderFactory.get(in);
+            arc = archiveReader.get(index);
+            BitarchiveRecord result = new BitarchiveRecord(arc, arcfile);
 
             // release resources locked
             log.info("GET: Got " + result.getLength()
@@ -155,8 +158,8 @@ public class Bitarchive {
                 if (arc != null) {
                     arc.close();
                 }
-                if (arcReader != null) {
-                    arcReader.close();
+                if (archiveReader != null) {
+                    archiveReader.close();
                 }
             } catch (IOException e) {
                 log.warn("Could not close ARCReader or ARCRecord: " + e);

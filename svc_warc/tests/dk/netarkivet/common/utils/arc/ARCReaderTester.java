@@ -45,12 +45,16 @@ public class ARCReaderTester extends TestCase {
             "tests/dk/netarkivet/common/utils/arc/data/input/";
     public void testARCReaderClose() {
         try {
-            FileUtils.copyFile(new File(ARCHIVE_DIR + "fyensdk.arc"),
-                    new File(ARCHIVE_DIR + "working.arc"));
-            ARCReader reader = ARCReaderFactory.get(new File(ARCHIVE_DIR + "working.arc"));
+            final String originalFilename = "fyensdk.arc";
+            final String workingFilename = "working.arc";
+            FileUtils.copyFile(new File(ARCHIVE_DIR + originalFilename),
+                    new File(ARCHIVE_DIR + workingFilename));
+            
+            ARCReader reader = ARCReaderFactory.get(
+                    new File(ARCHIVE_DIR + workingFilename));
             ARCRecord record = (ARCRecord) reader.get(0);
             BitarchiveRecord rec =
-                    new BitarchiveRecord(record);
+                    new BitarchiveRecord(record, workingFilename);
             record.close();
             reader.close();
             new File(ARCHIVE_DIR + "working.arc").delete();

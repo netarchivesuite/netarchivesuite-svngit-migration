@@ -105,7 +105,7 @@ public class TrivialArcRepositoryClient implements ArcRepositoryClient {
         try {
             reader = ARCReaderFactory.get(new File(dir, arcfile), index);
             record = (ARCRecord) reader.get();
-            return new BitarchiveRecord(record);
+            return new BitarchiveRecord(record, arcfile);
         } catch (IOException e) {
             throw new IOFailure("Error reading record from '"
                     + arcfile + "' offset " + index, e);

@@ -35,6 +35,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.archive.io.ArchiveRecord;
 import org.archive.io.arc.ARCReader;
 import org.archive.io.arc.ARCReaderFactory;
 import org.archive.io.arc.ARCRecord;
@@ -143,11 +144,11 @@ public class LocalArcRepositoryClient implements ArcRepositoryClient {
             return null;
         }
         ARCReader reader = null;
-        ARCRecord record = null;
+        ArchiveRecord record = null;
         try {
             reader = ARCReaderFactory.get(f, index);
-            record = (ARCRecord) reader.get();
-            return new BitarchiveRecord(record);
+            record = reader.get();
+            return new BitarchiveRecord(record, arcfile);
         } catch (IOException e) {
             throw new IOFailure("Error reading record from '"
                     + arcfile + "' offset " + index, e);

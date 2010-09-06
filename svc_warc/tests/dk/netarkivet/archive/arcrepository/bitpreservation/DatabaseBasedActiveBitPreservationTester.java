@@ -38,6 +38,8 @@ import java.util.List;
 import java.util.Map;
 
 import junit.framework.TestCase;
+
+import org.archive.io.ArchiveReaderFactory;
 import org.archive.io.arc.ARCReaderFactory;
 import org.archive.io.arc.ARCRecord;
 
@@ -439,7 +441,7 @@ public class DatabaseBasedActiveBitPreservationTester extends TestCase {
                     return null;
                 } else {
                     return new BitarchiveRecord(
-                            (ARCRecord) ARCReaderFactory.get(file).get(index));
+                            ArchiveReaderFactory.get(file).get(index), arcfile);
                 }
             } catch (IOException e) {
                 fail("Test failure while reading file '" + file + "'");

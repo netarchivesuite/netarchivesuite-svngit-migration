@@ -33,7 +33,9 @@ import java.io.Serializable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.archive.io.ArchiveRecord;
 import org.archive.io.arc.ARCRecord;
+import org.archive.io.warc.WARCRecord;
 
 import dk.netarkivet.common.CommonSettings;
 import dk.netarkivet.common.distribute.RemoteFile;
@@ -97,12 +99,14 @@ public class BitarchiveRecord implements Serializable {
      *  a byte array.
      * @param record the ARCRecord that the data should come from.  We do not
      * close the ARCRecord.
+     * @param filename The filename of the ArchiveFile
    */
-    public BitarchiveRecord(ARCRecord record) {
-        ArgumentNotValid.checkNotNull(record, "ARCRecord record");
-        fileName = record.getMetaData().getArcFile().getName();
-        offset = record.getMetaData().getOffset();
-        length = record.getMetaData().getLength();
+    public BitarchiveRecord(ArchiveRecord record, String filename) {
+        ArgumentNotValid.checkNotNull(record, "ArchiveRecord record");
+        ArgumentNotValid.checkNotNull(filename, "String filename");
+        this.fileName = filename; 
+        offset = record.getHeader().getOffset();
+        length = record.getHeader().getLength(); // TODO IS this the correct method
         if (length > LIMIT_FOR_SAVING_DATA_IN_OBJECT_BUFFER) {
             // copy arc-data to local file and create a RemoteFile based on this
             log.info("ARCRecord exceeds limit of "
@@ -124,7 +128,11 @@ public class BitarchiveRecord implements Serializable {
             }
         } else { // Store data in objectbuffer
             try {
-                objectBuffer = ARCUtils.readARCRecord(record);
+                if (record instanceof ARCRecord) {
+                    objectBuffer = ARCUtils.readARCRecord((ARCRecord) record);
+                } else if (record instanceof WARCRecord) {
+                    objectBuffer = WARCUtils.readWARCRecord((WARCRecord) record);
+                }
                 log.debug("Bytes stored in objectBuffer: "
                         + objectBuffer.length);
             } catch (IOException e) {
