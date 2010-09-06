@@ -102,7 +102,7 @@ public class TestArcRepositoryClient extends TrivialArcRepositoryClient {
         try {
             ARCReader arcReader = ARCReaderFactory.get(in);
             ARCRecord arc = (ARCRecord) arcReader.get(index);
-            BitarchiveRecord result = new BitarchiveRecord(arc);
+            BitarchiveRecord result = new BitarchiveRecord(arc, arcfile);
             return result;
         } catch (IOException e) {
             throw new IOFailure("Error reading record from " + arcfile + " offset " + index, e);

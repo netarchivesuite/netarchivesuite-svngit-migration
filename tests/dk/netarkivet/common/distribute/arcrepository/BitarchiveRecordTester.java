@@ -71,13 +71,13 @@ public class BitarchiveRecordTester extends TestCase {
         File f = testFile;
         ARCReader ar = ARCReaderFactory.get(f);
         ARCRecord record = (ARCRecord) ar.get(2001); // record representing record of size 9471 bytes
-        BitarchiveRecord br = new BitarchiveRecord(record);
+        BitarchiveRecord br = new BitarchiveRecord(record, f.getName());
         byte[] contents = StreamUtils.inputStreamToBytes(
                 br.getData(), (int) br.getLength());
         assertEquals("Should have same length", contents.length, br.getLength());
         // getData(outputStream)
         record = (ARCRecord) ar.get(2001); // record representing record of size 9471 bytes
-        br = new BitarchiveRecord(record);
+        br = new BitarchiveRecord(record, f.getName());
         // Store locally as tmp file
         f = new File(TestInfo.WORKING_DIR, "BitarchiveRecordGetData");
         OutputStream os = new FileOutputStream(f);
@@ -94,7 +94,7 @@ public class BitarchiveRecordTester extends TestCase {
         File f = testFile;
         ARCReader ar = ARCReaderFactory.get(f);
         ARCRecord record = (ARCRecord) ar.get(11563); // record representing record of size 395390 bytes
-        BitarchiveRecord br = new BitarchiveRecord(record);
+        BitarchiveRecord br = new BitarchiveRecord(record, f.getName());
         byte[] contents = StreamUtils.inputStreamToBytes(
                 br.getData(), (int) br.getLength());
         assertEquals("Should have same length: ",
@@ -102,7 +102,7 @@ public class BitarchiveRecordTester extends TestCase {
 
         // getData(outputStream)
         record = (ARCRecord) ar.get(11563); // record representing record of size 395390 bytes
-        br = new BitarchiveRecord(record);
+        br = new BitarchiveRecord(record, f.getName());
         // Store locally as tmp file
         f = new File(TestInfo.WORKING_DIR, "BitarchiveRecordGetData");
         OutputStream os = new FileOutputStream(f);
@@ -121,7 +121,7 @@ public class BitarchiveRecordTester extends TestCase {
         File f = testFile;
         ARCReader ar = ARCReaderFactory.get(f);
         ARCRecord record = (ARCRecord) ar.get(11563); // record representing record of size 395390 bytes
-        BitarchiveRecord br = new BitarchiveRecord(record);
+        BitarchiveRecord br = new BitarchiveRecord(record, f.getName());
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream ous = new ObjectOutputStream(baos);

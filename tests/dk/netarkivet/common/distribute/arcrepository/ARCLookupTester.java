@@ -38,6 +38,10 @@ import java.util.Map;
 import java.util.logging.LogManager;
 
 import junit.framework.TestCase;
+
+import org.archive.io.ArchiveReader;
+import org.archive.io.ArchiveReaderFactory;
+import org.archive.io.ArchiveRecord;
 import org.archive.io.arc.ARCConstants;
 import org.archive.io.arc.ARCReader;
 import org.archive.io.arc.ARCReaderFactory;
@@ -67,7 +71,7 @@ import dk.netarkivet.viewerproxy.ViewerProxySettings;
 public class ARCLookupTester extends TestCase {
     private ViewerArcRepositoryClient realArcRepos;
     private static ARCLookup lookup;
-    protected ARCReader arcReader;
+    protected ArchiveReader archiveReader;
     ReloadSettings rs = new ReloadSettings();
 
     public ARCLookupTester(String s) {
@@ -111,8 +115,8 @@ public class ARCLookupTester extends TestCase {
         if (realArcRepos != null) {
             realArcRepos.close();
         }
-        if (arcReader != null) {
-            arcReader.close();
+        if (archiveReader != null) {
+            archiveReader.close();
         }
         FileUtils.removeRecursively(TestInfo.WORKING_DIR);
         JMSConnectionMockupMQ.clearTestQueues();
@@ -175,10 +179,10 @@ public class ARCLookupTester extends TestCase {
         is.close();
         //Read the expected result from the "local" copy
         File in = new File(TestInfo.WORKING_DIR, TestInfo.GIF_URL_KEY.getFile().getName());
-        arcReader = ARCReaderFactory.get(in, TestInfo.GIF_URL_KEY.getOffset());
-        ARCRecord arc = (ARCRecord) arcReader.get();
+        archiveReader = ArchiveReaderFactory.get(in, TestInfo.GIF_URL_KEY.getOffset());
+        ArchiveRecord arc = archiveReader.get();
         BitarchiveRecord result
-                = new BitarchiveRecord(arc);
+                = new BitarchiveRecord(arc, TestInfo.GIF_URL_KEY.getFile().getName());
         arc.close();
         byte[] wanted = StreamUtils.inputStreamToBytes(result.getData(), (int) result.getLength());
         assertEquals("Did not get expected data: ",
@@ -266,7 +270,7 @@ public class ARCLookupTester extends TestCase {
                 ARCReader reader = ARCReaderFactory.get(new File(fileDir, arcFile),
                         index);
                 ARCRecord record = (ARCRecord) reader.get();
-                return new BitarchiveRecord(record);
+                return new BitarchiveRecord(record, arcFile);
             } catch (IOException e) {
                 fail("Can't find file " + arcFile + ": " + e);
                 return null;
@@ -304,7 +308,7 @@ public class ARCLookupTester extends TestCase {
                         = new ARCRecordMetaData(arcFile, metadata);
                 return new BitarchiveRecord(
                         new ARCRecord(new ByteArrayInputStream(data),
-                                      meta));
+                                      meta), arcFile);
             } catch (IOException e) {
                 fail("Cant't create metadata record");
                 return null;
