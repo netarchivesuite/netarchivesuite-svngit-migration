@@ -31,7 +31,9 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.archive.io.arc.ARCRecord;
+import org.archive.io.warc.WARCConstants;
 import org.archive.io.warc.WARCRecord;
+import org.archive.io.ArchiveRecordHeader;
 
 import dk.netarkivet.common.exceptions.IOFailure;
 import dk.netarkivet.common.utils.MD5;
@@ -41,6 +43,11 @@ import dk.netarkivet.common.Constants;
 
 
 /** Batch job that extracts information to create a CDX file.
+ * 
+ * This code is based on the following class from wayback-1.4.2:
+ * org.archive.wayback.resourcestore.indexer.WARCRecordToSearchResultAdapter
+ * 
+ * 
  *
  * A CDX file contains sorted lines of metadata from the ARC files, with
  * each line followed by the file and offset the record was found at, and
@@ -113,7 +120,15 @@ public class ExtractCDXJobForWarc extends WARCBatchJob {
      * @throws IOFailure on trouble reading arc record data
      */
     public void processRecord(WARCRecord sar, OutputStream os) {
-        log.trace("Processing ARCRecord with offset: " + sar.getHeader().getOffset());
+        log.trace("Processing WARCRecord with offset: " + sar.getHeader().getOffset());        
+        ArchiveRecordHeader header = sar.getHeader();
+        final String type = header.getHeaderValue(WARCConstants.HEADER_KEY_TYPE).toString();        
+        
+        if (!type.equals(WARCConstants.RESPONSE)) {
+            log.trace("The type '" + type + "' is currently not processed by our CDX extractor!");
+            return;
+        } 
+        
         /*
         * Fields are stored in a map so that it's easy
         * to pull them out when looking at the
@@ -136,7 +151,9 @@ public class ExtractCDXJobForWarc extends WARCBatchJob {
         * ARC header.
         */
         fieldsread.put("v", Long.toString(sar.getHeader().getOffset())); 
-        //fieldsread.put("g", sar.getHeader().getArcFile().getName());
+        log.info("readerID:" + sar.getHeader().getReaderIdentifier());
+        System.out.println("readerID:" + sar.getHeader().getReaderIdentifier());
+        fieldsread.put("g", sar.getHeader().getReaderIdentifier());
 
         /* Only include checksum if necessary: */
         if (includeChecksum) {
