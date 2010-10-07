@@ -59,7 +59,6 @@ import dk.netarkivet.common.utils.SystemUtils;
  * TODO: Turn this into a wrapper around ARCWriter instead.
  *
  */
-
 public class ARCUtils {
     /** The log. */
     private static Log log = LogFactory.getLog(ARCUtils.class.getName());
@@ -264,6 +263,8 @@ public class ARCUtils {
            // make sure we only return an array with bytes we actualy read
            byte[] truncateBuffer = new byte[totalBytes];
            System.arraycopy(tmpbuffer, 0, truncateBuffer, 0, totalBytes);
+           log.debug("Storing " + totalBytes + " bytes. Expected to store: "
+                   + tmpbuffer.length);
            return truncateBuffer;
        } else {
            return tmpbuffer;

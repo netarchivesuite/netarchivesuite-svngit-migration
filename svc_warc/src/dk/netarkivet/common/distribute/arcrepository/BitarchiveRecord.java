@@ -65,10 +65,10 @@ public class BitarchiveRecord implements Serializable {
     /** The actual data. */
     private byte[] objectBuffer;
 
-    /** The offset of the ARCRecord contained. */
+    /** The offset of the ArchiveRecord contained. */
     private long offset;
 
-    /** The length of the ARCRecord contained. */
+    /** The length of the ArchiveRecord contained. */
     private long length;
 
     /** The actual data as a remote file.*/
@@ -105,14 +105,20 @@ public class BitarchiveRecord implements Serializable {
         ArgumentNotValid.checkNotNull(record, "ArchiveRecord record");
         ArgumentNotValid.checkNotNull(filename, "String filename");
         this.fileName = filename; 
-        offset = record.getHeader().getOffset();
-        length = record.getHeader().getLength(); // TODO IS this the correct method
+        //offset = record.getHeader().getOffset();
+        if (record instanceof ARCRecord) {
+            length = record.getHeader().getLength();
+        } else if (record instanceof WARCRecord) {
+            length = record.getHeader().getLength() - record.getHeader().getContentBegin();
+        } else {
+            throw new ArgumentNotValid("Unknown type of ArchiveRecord");
+        }
         if (length > LIMIT_FOR_SAVING_DATA_IN_OBJECT_BUFFER) {
             // copy arc-data to local file and create a RemoteFile based on this
-            log.info("ARCRecord exceeds limit of "
+            log.info("Record exceeds limit of "
                     + LIMIT_FOR_SAVING_DATA_IN_OBJECT_BUFFER
                     + " bytes. Length is " + length
-                    + " bytes, Storing as "
+                    + " bytes, Storing as instance of "
                     + Settings.get(CommonSettings.REMOTE_FILE_CLASS));
             File localTmpFile = null;
             try {
