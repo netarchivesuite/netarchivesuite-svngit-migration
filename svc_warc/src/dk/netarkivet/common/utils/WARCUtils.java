@@ -20,7 +20,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package dk.netarkivet.common.distribute.arcrepository;
+package dk.netarkivet.common.utils;
 
 import java.io.IOException;
 
@@ -45,55 +45,51 @@ public class WARCUtils {
     protected static final Log log = LogFactory.getLog(WARCUtils.class);
 
     /**
-     * Read the contents of an ARC record into a byte array.
+     * Read the contents (payload) of an WARC record into a byte array.
      * 
      * @param record
-     *            An ARC record to read from. After reading, the ARC Record will
-     *            no longer have its own data available for reading.
-     * @return A byte array containing the contents of the ARC record. Note that
-     *         the size of this may be different from the size given in the ARC
-     *         record metadata.
+     *            An WARC record to read from. After reading, the WARC Record 
+     *            will no longer have its own data available for reading.
+     * @return A byte array containing the payload of the WARC record. Note 
+     *         that the size of the payload is calculated by subtracting
+     *         the contentBegin value from the length of the record (both values
+     *         included in the record header).
      * @throws IOFailure
      *             If there is an error reading the data, or if the record is
      *             longer than Integer.MAX_VALUE (since we can't make bigger
      *             arrays).
-     * @throws IOException If there is an error reading the data.            
      */
-    public static byte[] readWARCRecord(WARCRecord record) throws IOException {
+    public static byte[] readWARCRecord(WARCRecord record) throws IOFailure {
         ArgumentNotValid.checkNotNull(record, "WARCRecord record");
         if (record.getHeader().getLength() > Integer.MAX_VALUE) {
-            throw new IOFailure("ARC Record too long to fit in array: "
+            throw new IOFailure("WARC Record too long to fit in array: "
                     + record.getHeader().getLength() + " > "
                     + Integer.MAX_VALUE);
         }
-
-        // Skip to the ContentBlock of the WARCRecord
+        // Calculate the length of the payload.
+        // the size of the payload is calculated by subtracting
+        // the contentBegin value from the length of the record.
+        
         ArchiveRecordHeader header = record.getHeader();
-        int contentBegin = header.getContentBegin();
         long length = header.getLength();
-        int dataLength = (int) (length - contentBegin); // we know that this doesn't go wrong due to the above check
-        //record.skip(contentBegin);
-        log.info("DataLength set to " + dataLength);
+        
+        int payloadLength = (int) (length - header.getContentBegin()); 
                 
         // read from stream
-        // The arcreader has a number of "features" that complicates the read
-        // 1) the record at offset 0, returns too large a length
-        // 2) readfully does not work
-        // 3) ARCRecord.read(buf, offset, length) is broken.
-        // TODO verify if these "features" are still around: See bugs #903,
-        // #904,
-        // #905
-        //int dataLength = (int) record.getHeader().getLength();
-        byte[] tmpbuffer = new byte[dataLength];
+        byte[] tmpbuffer = new byte[payloadLength];
         byte[] buffer = new byte[Constants.IO_BUFFER_SIZE];
         int bytesRead;
         int totalBytes = 0;
-        for (; (totalBytes < dataLength)
-                && ((bytesRead = record.read(buffer)) != -1); totalBytes += bytesRead) {
-            System.arraycopy(buffer, 0, tmpbuffer, totalBytes, bytesRead);
+        try {
+            for (; (totalBytes < payloadLength)
+                    && ((bytesRead = record.read(buffer)) != -1); totalBytes += bytesRead) {
+                System.arraycopy(buffer, 0, tmpbuffer, totalBytes, bytesRead);
+            }
+        } catch (IOException e) {
+            throw new IOFailure("Failure when reading the WARC-record", e);
         }
         
-        // Check if the number of bytes read (=i) matches the
+        // Check if the number of bytes read (= totalbytes) matches the
         // size of the buffer.
         if (tmpbuffer.length != totalBytes) {
             // make sure we only return an array with bytes we actualy read

@@ -13,8 +13,8 @@ import org.archive.io.warc.WARCReaderFactory;
 import org.archive.io.warc.WARCRecord;
 
 import dk.netarkivet.common.CommonSettings;
-import dk.netarkivet.common.distribute.arcrepository.WARCUtils;
 import dk.netarkivet.common.utils.Settings;
+import dk.netarkivet.common.utils.WARCUtils;
 import dk.netarkivet.common.utils.cdx.CDXUtils;
 
 import junit.framework.TestCase;
