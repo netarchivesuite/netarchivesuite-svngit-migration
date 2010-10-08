@@ -45,9 +45,15 @@ public class warcTester extends TestCase {
     //}
 
     public static void main(String[] args) throws IOException {
-        long warcOffset = 955;
-        int warcContentBegin = 345;
-        long warcRecordLength = 621;
+        /*
+         *(Record type, url, offset, ContentBegin, Length): response, 
+         *http://netarkivet.dk/organisation/index-da.php, 85108, 361, 9291
+         */        
+        long warcOffset = 85108;
+        int warcContentBegin = 361;
+        long warcRecordLength = 9261; // Length = WarcRecordLength - WarcContentBegin
+        
+        
         WARCReader ar = WARCReaderFactory.get(f1);
         
         WARCRecord record = (WARCRecord) ar.get(warcOffset);
@@ -75,8 +81,8 @@ public class warcTester extends TestCase {
             String mime = header.getMimetype();
             
             if (type.equals(WARCConstants.RESPONSE) && !mime.equals("text/dns")) {
-                System.out.println("(Record type, offset, ContentBegin, Length): " + type + ", "
-                        + offset + ", " + header.getContentBegin() + ", " + header.getLength());
+                System.out.println("(Record type, url, offset, ContentBegin, Length): " + type + ", "
+                        + header.getUrl() + ", " + offset + ", " + header.getContentBegin() + ", " + header.getLength());
                 //System.out.println("offset: " + header.getOffset());
                 //System.out.println("ContentBegin: " + header.getContentBegin());
                 //System.out.println("Length: " + header.getLength());

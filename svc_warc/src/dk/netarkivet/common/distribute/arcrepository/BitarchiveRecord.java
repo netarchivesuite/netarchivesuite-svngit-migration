@@ -104,8 +104,7 @@ public class BitarchiveRecord implements Serializable {
     public BitarchiveRecord(ArchiveRecord record, String filename) {
         ArgumentNotValid.checkNotNull(record, "ArchiveRecord record");
         ArgumentNotValid.checkNotNull(filename, "String filename");
-        this.fileName = filename; 
-        //offset = record.getHeader().getOffset();
+        this.fileName = filename;
         if (record instanceof ARCRecord) {
             length = record.getHeader().getLength();
         } else if (record instanceof WARCRecord) {
