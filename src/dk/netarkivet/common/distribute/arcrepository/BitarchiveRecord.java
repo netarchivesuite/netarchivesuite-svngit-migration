@@ -45,6 +45,7 @@ import dk.netarkivet.common.exceptions.IOFailure;
 import dk.netarkivet.common.exceptions.IllegalState;
 import dk.netarkivet.common.utils.FileUtils;
 import dk.netarkivet.common.utils.Settings;
+import dk.netarkivet.common.utils.WARCUtils;
 import dk.netarkivet.common.utils.arc.ARCUtils;
 
 /**
@@ -90,24 +91,29 @@ public class BitarchiveRecord implements Serializable {
         = LogFactory.getLog(BitarchiveRecord.class.getName());
 
     /**
-     * Creates a BitarchiveRecord from the a ARCRecord.
+     * Creates a BitarchiveRecord from the a ArchiveRecord, which can be either
+     * a ARCRecord or WARCRecord. Note that record metadata is not included with
+     * the BitarchiveRecord, only the payload of the record.
      * 
-     * The filename of the original ARC is read from the ARCRecord itself.
      * If the length of the record is higher than Settings
      * .BITARCHIVE_LIMIT_FOR_RECORD_DATATRANSFER_IN_FILE
      *  the data is stored in a RemoteFile, otherwise the data is stored in
      *  a byte array.
-     * @param record the ARCRecord that the data should come from.  We do not
-     * close the ARCRecord.
+     * @param record the ArchiveRecord that the data should come from.  We do not
+     * close the ArchiveRecord.
      * @param filename The filename of the ArchiveFile
    */
     public BitarchiveRecord(ArchiveRecord record, String filename) {
         ArgumentNotValid.checkNotNull(record, "ArchiveRecord record");
         ArgumentNotValid.checkNotNull(filename, "String filename");
         this.fileName = filename;
+        this.offset = record.getHeader().getOffset();
         if (record instanceof ARCRecord) {
             length = record.getHeader().getLength();
         } else if (record instanceof WARCRecord) {
+            // The length of the payload of the warc-record is not getLength(),
+            // but getLength minus getContentBegin(), which is the number of 
+            // bytes used for the record-header!
             length = record.getHeader().getLength() - record.getHeader().getContentBegin();
         } else {
             throw new ArgumentNotValid("Unknown type of ArchiveRecord");
