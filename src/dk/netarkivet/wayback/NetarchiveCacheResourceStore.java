@@ -91,8 +91,10 @@ public class NetarchiveCacheResourceStore implements ResourceStore {
         File wantedFile = fileCache.get(arcfile);
         try {
             if (wantedFile != null && wantedFile.exists()) {
+                logger.debug("Found the file '" + arcfile + "' in the cache. ");
                 return ResourceFactory.getResource(wantedFile, offset);
             } else {
+                logger.debug("The file '" + arcfile + "' was not found in the cache. ");
                 // Get file from bitarchive, and place it in the cachedir directory
                 File fileFromBitarchive = new File(fileCache.getCacheDir(), arcfile);
                 client.getFile(arcfile, replicaUsed, fileFromBitarchive);
