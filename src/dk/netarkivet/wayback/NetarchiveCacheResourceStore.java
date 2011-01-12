@@ -105,7 +105,7 @@ public class NetarchiveCacheResourceStore implements ResourceStore {
         } catch (IOException e) {
             logger.error("Error looking for non existing resource", e);
             throw new ResourceNotAvailableException(this.getClass().getName()
-                       + "throws NullPointerException when accessing "
+                       + "Throws Exception when accessing "
                        + "CaptureResult given from Wayback.");
         }
     }

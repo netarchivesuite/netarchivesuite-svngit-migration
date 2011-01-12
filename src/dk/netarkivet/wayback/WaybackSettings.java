@@ -186,10 +186,10 @@ public class WaybackSettings {
      * The default is 100. 
      */
     public static String WAYBACK_RESOURCESTORE_CACHE_MAXFILES =
-            "settings.wayback.resourcestore.cache.maxfiles";
+            "settings.wayback.resourcestore.maxfiles";
    
     /** The cachedirectory. */
     public static String WAYBACK_RESOURCESTORE_CACHE_DIR =
-            "settings.wayback.resourcestore.cache.dir";
+            "settings.wayback.resourcestore.cachedir";
     
 }

@@ -97,15 +97,23 @@ public class LRUCache {
                 }
                 return removeEldest;
             }};
+            
             // fill up the map with the contents in cachedir
-            // Throw exception if the contents in cachedir exceeds the size of the cache
+            // if the contents in cachedir exceeds the given cachesize, change the 
+            // size of the cache
             String[] cachedirFiles = cacheDir.list();
             logger.info("Initializing the cache with the contents of the cachedir '"
-                    + cacheDir.getAbsolutePath() + "'");            
+                    + cacheDir.getAbsolutePath() + "'");
+            if (cachedirFiles.length > this.cacheSize) {
+                logger.warn("Changed the cachesize from " + cacheSize + " to "
+                        + cachedirFiles.length);
+                this.cacheSize = cachedirFiles.length;
+            }
             for (String cachefile: cachedirFiles) {
                 map.put(cachefile, new File(cacheDir, cachefile));
             }
-            logger.info("The contents of the cache is now" + map.size());           
+            logger.info("The contents of the cache is now " + map.size()
+                    + " files");           
     }
 
     /**
