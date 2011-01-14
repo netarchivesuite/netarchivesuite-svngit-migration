@@ -978,6 +978,7 @@ public class HarvestDefinitionDBDAO extends HarvestDefinitionDAO {
                     + "       harvestdefinitions.edition,"
                     + "       fullharvests.maxobjects,"
                     + "       fullharvests.maxbytes,"
+                    + "       fullharvests.maxjobrunningtime,"
                     + "       fullharvests.previoushd "
                     + "FROM harvestdefinitions, fullharvests"
                     + " WHERE harvestdefinitions.harvest_id "
@@ -990,7 +991,8 @@ public class HarvestDefinitionDBDAO extends HarvestDefinitionDAO {
                         res.getLong(1),
                         res.getString(2), res.getString(3), res.getInt(4),
                         res.getBoolean(5), res.getLong(6), res.getLong(7),
-                        res.getLong(8), DBUtils.getLongMaybeNull(res, 9));
+                        res.getLong(8), res.getLong(9), 
+                        DBUtils.getLongMaybeNull(res, 10));
                 harvests.add(sfh);
             }
             return harvests;
@@ -1104,6 +1106,7 @@ public class HarvestDefinitionDBDAO extends HarvestDefinitionDAO {
                     + "       harvestdefinitions.edition,"
                     + "       fullharvests.maxobjects,"
                     + "       fullharvests.maxbytes,"
+                    + "       fullharvests.maxjobrunningtime,"
                     + "       fullharvests.previoushd "
                     + "FROM harvestdefinitions, fullharvests"
                     + " WHERE harvestdefinitions.name = ?"
@@ -1116,7 +1119,8 @@ public class HarvestDefinitionDBDAO extends HarvestDefinitionDAO {
                         res.getLong(1),
                         harvestName, res.getString(2), res.getInt(3),
                         res.getBoolean(4), res.getLong(5), res.getLong(6),
-                        res.getLong(7), DBUtils.getLongMaybeNull(res, 8));
+                        res.getLong(7), res.getLong(8), 
+                        DBUtils.getLongMaybeNull(res, 9));
             } else {
                 return null;
             }

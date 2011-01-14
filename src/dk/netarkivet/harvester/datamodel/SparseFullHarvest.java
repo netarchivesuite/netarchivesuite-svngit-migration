@@ -65,6 +65,13 @@ public class SparseFullHarvest {
      * harvest.
      */
     private long maxBytes;
+    
+    /**
+     * The maximum number of seconds that the harvester can use on each job
+     * in this harvest.
+     */
+    private long maxJobRunningTime;
+    
     /**
      * The ID for the harvestdefinition, this FullHarvest is based upon.
      */
@@ -81,6 +88,7 @@ public class SparseFullHarvest {
      * @param edition             DAO edition of harvest.
      * @param maxCountObjects     Limit for how many objects can be harvested
      * @param maxBytes            Limit for how many bytes can be harvested
+     * @param maxJobRunningTime   Limit on how long each job can last
      * @param previousFullHarvest This id of the harvestDefinition used to
      *                            create this Fullharvest definition. May be
      *                            null for none
@@ -93,6 +101,7 @@ public class SparseFullHarvest {
                              boolean active,
                              long edition, long maxCountObjects,
                              long maxBytes,
+                             long maxJobRunningTime,
                              Long previousFullHarvest) {
         ArgumentNotValid.checkNotNull(oid, "oid");
         ArgumentNotValid.checkNotNullOrEmpty(harvestDefName, "harvestDefName");
@@ -106,6 +115,7 @@ public class SparseFullHarvest {
         this.edition = edition;
         this.maxCountObjects = maxCountObjects;
         this.maxBytes = maxBytes;
+        this.maxJobRunningTime = maxJobRunningTime;
         this.previousHarvestDefinitionOid = previousFullHarvest;
     }
 
@@ -138,6 +148,15 @@ public class SparseFullHarvest {
         return maxBytes;
     }
 
+    /**
+     * Get the maximum number of seconds that the harvester will spend on
+     * each job in this harvest. 0 means no limit.
+     * @return Total amount of seconds the harvester can spend on each job.
+     */
+    public long getMaxJobRunningTime() {
+        return maxJobRunningTime;
+    }
+    
     /**
      * Name of harvest definition.
      *

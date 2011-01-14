@@ -489,7 +489,7 @@ public class DomainDBDAO extends DomainDAO {
                     // Update
                     DBUtils.setComments(s, 1, dc, Constants.MAX_COMMENT_SIZE);
                     s.setString(2, dc.getOrderXmlName());
-                    s.setInt(3, dc.getMaxObjects());
+                    s.setLong(3, dc.getMaxObjects());
                     s.setInt(4, dc.getMaxRequestRate());
                     s.setLong(5, dc.getMaxBytes());
                     s.setString(6, dc.getName());
@@ -813,7 +813,7 @@ public class DomainDBDAO extends DomainDAO {
             DBUtils.setComments(s, 2, dc, Constants.MAX_COMMENT_SIZE);
             s.setLong(3, d.getID());
             s.setLong(4, templateId);
-            s.setInt(5, dc.getMaxObjects());
+            s.setLong(5, dc.getMaxObjects());
             s.setInt(6, dc.getMaxRequestRate());
             s.setLong(7, dc.getMaxBytes());
             int rows = s.executeUpdate();
@@ -1063,7 +1063,7 @@ public class DomainDBDAO extends DomainDAO {
                 String domainconfigName = res.getString(2);
                 String domainConfigComments = res.getString(3);
                 String order = res.getString(4);
-                int maxobjects = res.getInt(5);
+                long maxobjects = res.getLong(5);
                 int maxrate = res.getInt(6);
                 long maxbytes = res.getLong(7);
                 s1 = c.prepareStatement("SELECT seedlists.name "

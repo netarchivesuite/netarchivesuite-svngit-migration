@@ -25,7 +25,6 @@ package dk.netarkivet.harvester;
 import java.util.regex.Pattern;
 
 import dk.netarkivet.common.utils.Settings;
-import dk.netarkivet.harvester.datamodel.SeedList;
 import dk.netarkivet.harvester.harvesting.HarvestDocumentation;
 import dk.netarkivet.harvester.harvesting.controller.BnfHeritrixController;
 import dk.netarkivet.harvester.harvesting.frontier.TopTotalEnqueuesFilter;
@@ -167,7 +166,14 @@ public class HarvesterSettings {
      */
     public static String JOBS_MAX_TOTAL_JOBSIZE
             = "settings.harvester.scheduler.jobs.maxTotalSize";
-
+    /**
+     * <b>settings.harvester.scheduler.jobs.maxTimeToCompleteJob</b>: 
+     * <br> The limit on how many seconds Heritrix should continue on 
+     * each job. O means no limit.
+     */
+    public static String JOBS_MAX_TIME_TO_COMPLETE
+    		= "settings.harvester.scheduler.jobs.maxTimeToCompleteJob";
+    
     /**
      * <b>settings.harvester.scheduler.configChunkSize</b>: <br> How many domain
      * configurations we will process in one go before making jobs out of them.
@@ -491,7 +497,12 @@ public class HarvesterSettings {
      */
     public static String METADATA_GENERATE_ARCFILES_REPORT =
             "settings.harvester.harvesting.metadata.generateArcFilesReport";
-
+    /**
+     * <b>settings.harvester.aliases.timeout</b> The amount of time in seconds before 
+     * an alias times out, and needs to be re-evaluated.
+     * The default value is one year, i.e 31536000 seconds.
+     */
+    public static String ALIAS_TIMEOUT = "settings.harvester.aliases.timeout";
 
 }
 

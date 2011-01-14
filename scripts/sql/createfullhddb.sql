@@ -134,7 +134,7 @@ create table configurations (
                                      --  to (represented in table domains)
      template_id bigint not null,    -- Reference to template order.xml
                                      --  (represented in table ordertemplates)
-     maxobjects int,                 -- Max count of objects from the domain
+     maxobjects bigint not null default -1, -- Max count of objects from the domain
      maxrate int,                    -- Max connections per minute
      overridelimits int,             -- True if the configuration's limits
                                      --  should apply in snapshot harvests
@@ -424,6 +424,8 @@ create table jobs (
     num_configs int not null default 0,  -- Number of configurations in the
                                          --  job, autocreated for optimization
                                          --  purposes
+    max_running_time bigint not null,	-- Max number of seconds that the harvester 
+                                        -- can work on this job
     edition bigint not null   -- Marker for optimistic locking by web interface
 );
 
