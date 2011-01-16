@@ -195,6 +195,12 @@ public class Job implements Serializable {
      * The total number of objects expected by all added configurations.
      */
     private long totalCountObjects;
+    
+    /**
+     * The max seconds spent by the harvester on this job. 
+     * 0 is unlimited.
+     */
+    private long maxJobRunningTime;
 
     /** If true, this job object is still undergoing changes due to having
      * more configurations added.  When set to false, the object is no longer
@@ -236,6 +242,8 @@ public class Job implements Serializable {
      *                                 -1 means no limit
      * @param forceMaxBytesPerDomain The maximum number of objects harvested
      * from a domain, or -1 for no limit.
+     * @param maximumJobRunningTimeInSeconds The max seconds spent by the 
+     * 										harvester on this job
      * @param harvestNum               the run number of the harvest definition
      * @throws ArgumentNotValid if cfg or priority is null or harvestID is
      *                          invalid, or if any limit < -1
@@ -243,6 +251,7 @@ public class Job implements Serializable {
      */
     Job(Long harvestID, DomainConfiguration cfg, JobPriority priority,
         long forceMaxObjectsPerDomain, long forceMaxBytesPerDomain,
+        long maximumJobRunningTimeInSeconds,
         int harvestNum) throws ArgumentNotValid {
         ArgumentNotValid.checkNotNull(cfg, "cfg");
         ArgumentNotValid.checkNotNull(harvestID, "harvestID");
@@ -315,6 +324,8 @@ public class Job implements Serializable {
      *                                 configuration settings. 0 means no limit.
      * @param forceMaxBytesPerDomain The maximum number of objects harvested
      * from a domain, or -1 for no limit.
+     * @param maximumJobRunningTimeInSeconds
+     * 								   the max running time for this job 
      * @param status                   the current status of the job.
      * @param orderXMLname             the name of the order template used.
      * @param orderXMLdoc              the (possibly modified) template
@@ -324,6 +335,7 @@ public class Job implements Serializable {
     Job(Long harvestID, Map<String, String> configurations,
             JobPriority priority,
             long forceMaxObjectsPerDomain, long forceMaxBytesPerDomain,
+            long maximumJobRunningTimeInSeconds,
             JobStatus status,
             String orderXMLname,
             Document orderXMLdoc, String seedlist, int harvestNum) {
@@ -357,7 +369,10 @@ public class Job implements Serializable {
         // Use -1 to indicate no limits for max objects and max bytes.
         return new Job(harvestID, cfg, JobPriority.HIGHPRIORITY,
                 Constants.HERITRIX_MAXOBJECTS_INFINITY,
-                Constants.HERITRIX_MAXBYTES_INFINITY, harvestNum);
+                Constants.HERITRIX_MAXBYTES_INFINITY, 
+               //TODO or INFINITY like the two others (i.e. 0)
+                Constants.DEFAULT_MAX_JOB_RUNNING_TIME, 
+                harvestNum);
     }
 
     /**
@@ -378,6 +393,8 @@ public class Job implements Serializable {
      *                            domain, overrides individual configuration
      *                            settings unless the domain has overrideLimits
      *                            set.  -1 means no limit.
+     * @param maxRunningSeconds   The max amount of running time for this job 
+     * 							  (0 is unlimited)                      
      * @param harvestNum          Which run of the harvest definition this is
      *                           (should always be 1).
      * @return SnapShotJob
@@ -385,10 +402,12 @@ public class Job implements Serializable {
      */
     public static Job createSnapShotJob(Long harvestID, DomainConfiguration cfg,
                                         long maxObjectsPerDomain,
-                                        long maxBytesPerDomain, int harvestNum)
+                                        long maxBytesPerDomain, 
+                                        long maxRunningSeconds, int harvestNum)
             throws ArgumentNotValid {
         return new Job(harvestID, cfg, JobPriority.LOWPRIORITY,
-                maxObjectsPerDomain, maxBytesPerDomain, harvestNum);
+                maxObjectsPerDomain, maxBytesPerDomain, 
+                maxRunningSeconds, harvestNum);
     }
 
     /**

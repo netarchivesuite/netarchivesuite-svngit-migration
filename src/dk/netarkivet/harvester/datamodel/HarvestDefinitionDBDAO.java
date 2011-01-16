@@ -254,7 +254,8 @@ public class HarvestDefinitionDBDAO extends HarvestDefinitionDAO {
         try {
             s = c.prepareStatement(
                                 "SELECT name, comments, numevents, submitted, "
-                                + "previoushd, maxobjects, maxbytes, isactive, "
+                                + "previoushd, maxobjects, maxbytes, "
+                                + "maxjobrunningtime, isactive, "
                                 + "edition "
                                 + "FROM harvestdefinitions, fullharvests "
                                 + "WHERE harvestdefinitions.harvest_id = ?"
@@ -271,20 +272,21 @@ public class HarvestDefinitionDBDAO extends HarvestDefinitionDAO {
                         res.getTimestamp(4).getTime());
                 final long maxObjects = res.getLong(6);
                 final long maxBytes = res.getLong(7);
+                final long maxJobRunningtime = res.getLong(8);
                 FullHarvest fh;
                 long prevhd = res.getLong(5);
                 if (!res.wasNull()) {
                     fh = new FullHarvest(name, comments, prevhd, maxObjects,
-                                         maxBytes);
+                                         maxBytes, maxJobRunningtime);
                 } else {
                     fh = new FullHarvest(name, comments, null, maxObjects,
-                                         maxBytes);
+                                         maxBytes, maxJobRunningtime);
                 }
                 fh.setSubmissionDate(submissionDate);
                 fh.setNumEvents(numEvents);
-                fh.setActive(res.getBoolean(8));
+                fh.setActive(res.getBoolean(9));
                 fh.setOid(harvestDefinitionID);
-                fh.setEdition(res.getLong(9));
+                fh.setEdition(res.getLong(10));
                 // We found a FullHarvest object, just return it.
                 return fh;
             }

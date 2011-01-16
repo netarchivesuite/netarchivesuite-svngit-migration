@@ -412,6 +412,8 @@ public class JobDBDAO extends JobDAO {
             JobPriority pri = JobPriority.fromOrdinal(result.getInt(3));
             long forceMaxCount = result.getLong(4);
             long forceMaxBytes = result.getLong(5);
+            //FIXME read from database
+            long forceMaxRunningTime = 0L;
             String orderxml = result.getString(6);
 
             Document orderXMLdoc = null;
@@ -470,7 +472,8 @@ public class JobDBDAO extends JobDAO {
                 configurationMap.put(domainName, configName);
             }
             final Job job = new Job(harvestID, configurationMap,
-                    pri, forceMaxCount, forceMaxBytes, status, orderxml,
+                    pri, forceMaxCount, forceMaxBytes, forceMaxRunningTime, 
+                    status, orderxml,
                     orderXMLdoc, seedlist, harvestNum);
             job.appendHarvestErrors(harvestErrors);
             job.appendHarvestErrorDetails(harvestErrorDetails);
