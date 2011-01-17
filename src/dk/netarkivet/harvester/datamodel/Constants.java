@@ -73,6 +73,9 @@ public class Constants {
     public static final long HERITRIX_MAXBYTES_INFINITY = -1L;
     /** Max objects of -1 means infinity. */
     public static final long HERITRIX_MAXOBJECTS_INFINITY = -1L;
+    /** Max running time of 0 means no restriction on running time. */
+    public static final long HERITRIX_MAXRUNNINGTIME_INFINITY = 0L;
+    
     /** This is the default number set as max bytes harvested.
      * Set to the max number of bytes we harvest from any domain per harvest,
      * unless explicitly deciding otherwise. */

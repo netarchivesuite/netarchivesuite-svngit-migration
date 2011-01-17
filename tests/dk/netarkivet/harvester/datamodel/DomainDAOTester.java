@@ -22,7 +22,6 @@
 package dk.netarkivet.harvester.datamodel;
 
 import java.lang.reflect.Field;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -43,8 +42,6 @@ import dk.netarkivet.testutils.StringAsserts;
  */
 public class DomainDAOTester extends DataModelTestCase {
     private static final int NUM_DOMAINS = 4;
-
-    Connection c;
 
     public void setUp() throws Exception {
         super.setUp();
@@ -396,8 +393,9 @@ public class DomainDAOTester extends DataModelTestCase {
             //expected
         }
 
-        HarvestDefinition hd = HarvestDefinition.createFullHarvest("Full Harvest", "Test of full harvest", null, 2000,
-                                                                   Constants.DEFAULT_MAX_BYTES);
+        HarvestDefinition hd = HarvestDefinition.createFullHarvest(
+                "Full Harvest", "Test of full harvest", null, 2000,
+                Constants.DEFAULT_MAX_BYTES, Constants.DEFAULT_MAX_JOB_RUNNING_TIME);
         hd.setSubmissionDate(new Date());
         HarvestDefinitionDAO.getInstance().create(hd);
 

@@ -282,7 +282,8 @@ public class JobTester extends DataModelTestCase {
 
         //Make a job with limit of 2000000 defined by harvest definition
         dc.setMaxBytes(5000000);
-        job = Job.createSnapShotJob(TestInfo.HARVESTID, dc, -1L, 2000000, 0);
+        job = Job.createSnapShotJob(TestInfo.HARVESTID, dc, -1L, 2000000, 
+                Constants.HERITRIX_MAXRUNNINGTIME_INFINITY, 0);
 
         anotherConfig.setMaxBytes(2000000);
         assertTrue("Should accept config with same limit",
@@ -298,7 +299,8 @@ public class JobTester extends DataModelTestCase {
 
         //Make a job with limit of 2000000 defined by harvest definition
         dc.setMaxBytes(2000000);
-        job = Job.createSnapShotJob(TestInfo.HARVESTID, dc, -1L, 5000000, 0);
+        job = Job.createSnapShotJob(TestInfo.HARVESTID, dc, -1L, 5000000, 
+                Constants.HERITRIX_MAXRUNNINGTIME_INFINITY, 0);
 
         anotherConfig.setMaxBytes(2000000);
         assertTrue("Should accept config with same limit",
@@ -355,7 +357,9 @@ public class JobTester extends DataModelTestCase {
         d.getHistory().addHarvestInfo(hi);
         DomainDAO.getInstance().create(d);
 
-        job = Job.createSnapShotJob(TestInfo.HARVESTID, d.getDefaultConfiguration(), 1L, -1, 0);
+        job = Job.createSnapShotJob(TestInfo.HARVESTID, 
+                d.getDefaultConfiguration(), 1L, Constants.HERITRIX_MAXBYTES_INFINITY, 
+                Constants.HERITRIX_MAXRUNNINGTIME_INFINITY, 0);
         assertEquals("First configuration should be accepted", 1, job.getCountDomains());
 
     }
@@ -496,7 +500,8 @@ public class JobTester extends DataModelTestCase {
         assertEquals("A new job should have high priority", JobPriority.HIGHPRIORITY,
                 job0.getPriority());
         Job job1 = Job.createSnapShotJob(new Long(1),
-                d.getDefaultConfiguration(), 2000, -1, 0);
+                d.getDefaultConfiguration(), 2000, -1, 
+                Constants.HERITRIX_MAXRUNNINGTIME_INFINITY, 0);
         assertEquals("A new job should have high priority", JobPriority.LOWPRIORITY,
                 job1.getPriority());
     }
@@ -508,7 +513,8 @@ public class JobTester extends DataModelTestCase {
                 TestInfo.getDefaultConfig(TestInfo.getDefaultDomain());
 
         try {
-            Job.createSnapShotJob(TestInfo.HARVESTID, defaultConfig, -42, -1, 0);
+            Job.createSnapShotJob(TestInfo.HARVESTID, defaultConfig, -42, -1, 
+                    Constants.HERITRIX_MAXRUNNINGTIME_INFINITY, 0);
             fail("Should not accept a negative value for max objects per domain");
         } catch (ArgumentNotValid e) {
             // expected
@@ -518,7 +524,8 @@ public class JobTester extends DataModelTestCase {
         // Should fail (capped to domain config limit)
         
         Job job1 = Job.createSnapShotJob(TestInfo.HARVESTID, defaultConfig,
-                TestInfo.MAX_OBJECTS_PER_DOMAIN, -1, 0);
+                TestInfo.MAX_OBJECTS_PER_DOMAIN, -1, 
+                Constants.HERITRIX_MAXRUNNINGTIME_INFINITY, 0);
         assertEquals("forceMaxObjectsPerDomain higher than config limit",
                 defaultConfig.getMaxObjects(),
                 job1.getForceMaxObjectsPerDomain());
@@ -526,7 +533,7 @@ public class JobTester extends DataModelTestCase {
         // Try to set a limit lower than domain config limit, should work
         long jobLimit = defaultConfig.getMaxObjects() - 1;
         Job job2 = Job.createSnapShotJob(TestInfo.HARVESTID, defaultConfig,
-                jobLimit, -1, 0);
+                jobLimit, -1, Constants.HERITRIX_MAXRUNNINGTIME_INFINITY, 0);
         assertEquals("Failed to set forceMaxObjectsPerDomain",
                 jobLimit, 
                 job2.getForceMaxObjectsPerDomain());
@@ -546,14 +553,16 @@ public class JobTester extends DataModelTestCase {
                 TestInfo.getDefaultConfig(TestInfo.getDefaultDomain());
 
         try {
-            Job.createSnapShotJob(TestInfo.HARVESTID, defaultConfig, -42, -1, 0);
+            Job.createSnapShotJob(TestInfo.HARVESTID, defaultConfig, -42, -1, 
+                    Constants.HERITRIX_MAXRUNNINGTIME_INFINITY, 0);
             fail("Should not accept a negative value for max objects per domain");
         } catch (ArgumentNotValid e) {
             // expected
         }
 
         try {
-            Job.createSnapShotJob(TestInfo.HARVESTID, defaultConfig, -1, -42, 0);
+            Job.createSnapShotJob(TestInfo.HARVESTID, defaultConfig, -1, -42, 
+                    Constants.HERITRIX_MAXRUNNINGTIME_INFINITY, 0);
             fail("Should not accept a negative value for max bytes per domain");
         } catch (ArgumentNotValid e) {
             // expected
@@ -566,7 +575,9 @@ public class JobTester extends DataModelTestCase {
                job.getForceMaxObjectsPerDomain());
 
 
-        job = Job.createSnapShotJob(TestInfo.HARVESTID, defaultConfig, TestInfo.MAX_OBJECTS_PER_DOMAIN, -1, 0);
+        job = Job.createSnapShotJob(TestInfo.HARVESTID, defaultConfig, 
+                TestInfo.MAX_OBJECTS_PER_DOMAIN, -1, 
+                Constants.HERITRIX_MAXRUNNINGTIME_INFINITY, 0);
 
         // test getForceMaxObjectsPerDomain():
         assertEquals("Value set in setForceMaxObjectsPerDomain not capped",
@@ -732,7 +743,11 @@ public class JobTester extends DataModelTestCase {
         DomainConfiguration dc = TestInfo.getNetarkivetConfiguration();
         dc.setMaxBytes(-1);
         final int harvestNum = 4;
-        Job j = new Job(42L, dc, JobPriority.HIGHPRIORITY, -1, -1, harvestNum);
+        Job j = new Job(42L, dc, JobPriority.HIGHPRIORITY, 
+                Constants.HERITRIX_MAXOBJECTS_INFINITY, 
+                Constants.HERITRIX_MAXBYTES_INFINITY, 
+                Constants.HERITRIX_MAXRUNNINGTIME_INFINITY,
+                harvestNum);
         assertEquals("Job should have harvest num set", harvestNum,
                      j.getHarvestNum());
         assertEquals("Job should have harvest id set", new Long(42L),
@@ -752,16 +767,25 @@ public class JobTester extends DataModelTestCase {
                      j.getDomainConfigurationMap().values().iterator().next());
 
         dc.setMaxBytes(1000000);
-        j = new Job(42L, dc, JobPriority.HIGHPRIORITY, -1, -1, harvestNum);
+        j = new Job(42L, dc, JobPriority.HIGHPRIORITY, 
+                Constants.HERITRIX_MAXOBJECTS_INFINITY, 
+                Constants.HERITRIX_MAXBYTES_INFINITY, 
+                Constants.HERITRIX_MAXRUNNINGTIME_INFINITY, harvestNum);
         assertEquals("Job should have byte limit (config sets it)",
                      1000000, j.getMaxBytesPerDomain());
 
-        j = new Job(42L, dc, JobPriority.HIGHPRIORITY, -1, 500000, harvestNum);
+        j = new Job(42L, dc, JobPriority.HIGHPRIORITY, 
+                Constants.HERITRIX_MAXOBJECTS_INFINITY, 
+                500000L, 
+                Constants.HERITRIX_MAXRUNNINGTIME_INFINITY, harvestNum);
         assertEquals("Job should have byte limit (hd sets it)",
-                     500000, j.getMaxBytesPerDomain());
+                     500000L, j.getMaxBytesPerDomain());
 
         dc.setMaxBytes(500000);
-        j = new Job(42L, dc, JobPriority.HIGHPRIORITY, -1, 1000000, harvestNum);
+        j = new Job(42L, dc, JobPriority.HIGHPRIORITY, 
+                Constants.HERITRIX_MAXOBJECTS_INFINITY, 1000000,
+                Constants.HERITRIX_MAXRUNNINGTIME_INFINITY,
+                harvestNum);
         assertEquals("Job should have byte limit (hd sets it)",
                      500000, j.getMaxBytesPerDomain());
 
@@ -837,6 +861,7 @@ public class JobTester extends DataModelTestCase {
                 defaultConfig,
                 42, //maxObjectsPerDomain
                 -1, //maxBytesPerDomain
+                Constants.HERITRIX_MAXRUNNINGTIME_INFINITY, // no limit on running time
                 0   //harvestNum
         );
         // test default value of forceMaxObjectsPerDomain:
@@ -900,7 +925,9 @@ public class JobTester extends DataModelTestCase {
         DomainConfiguration dc = TestInfo.getNetarkivetConfiguration();
         dc.setMaxBytes(-1);
         final int harvestNum = 4;
-        Job j = new Job(42L, dc, JobPriority.HIGHPRIORITY, -1, -1, harvestNum);
+        Job j = new Job(42L, dc, JobPriority.HIGHPRIORITY, 
+                -1L, -1L, Constants.HERITRIX_MAXRUNNINGTIME_INFINITY, 
+                harvestNum);
         String seeds = 
               "http://www.politik.tv2.dk/\n"
             + "http://dr.dk/valg\n"

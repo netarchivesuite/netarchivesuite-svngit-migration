@@ -292,6 +292,8 @@ create table fullharvests (
     maxobjects bigint not null,             -- Count of max objects per domain
     previoushd bigint,        -- Harvest that this snapshot harvest is based on
     maxbytes bigint default -1 -- Maximum number of bytes to harvest per domain
+    maxjobrunningtime bigint default 0 -- maximum snapshot running time 
+                                       -- (0 means no limit)
 );
 
 -------------------------------------------------------------------------------

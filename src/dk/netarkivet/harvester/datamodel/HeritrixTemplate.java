@@ -97,10 +97,7 @@ public class HeritrixTemplate {
     public static final String DEDUPLICATOR_XPATH =
             "/crawl-order/controller/map[@name='write-processors']"
             + "/newObject[@name='DeDuplicator']";
-
-
-
-
+     
     /** Xpath to check, that all templates use the same archiver path,
      * {@link dk.netarkivet.common.Constants#ARCDIRECTORY_NAME}.
      * The archive path tells Heritrix to which directory it shall write

@@ -200,7 +200,7 @@ public class Job implements Serializable {
      * The max seconds spent by the harvester on this job. 
      * 0 is unlimited.
      */
-    private long maxJobRunningTime;
+    private long forceMaxRunningSeconds;
 
     /** If true, this job object is still undergoing changes due to having
      * more configurations added.  When set to false, the object is no longer
@@ -1053,6 +1053,7 @@ public class Job implements Serializable {
             + getOrigHarvestDefinitionID() + ", priority = " + getPriority()
             + ", forcemaxcount = " + getForceMaxObjectsPerDomain()
             + ", forcemaxbytes = " + getMaxBytesPerDomain()
+            + ", forcemaxrunningseconds = " + forceMaxRunningSeconds
             + ", orderxml = " + getOrderXMLName()
             + ", numconfigs = " + getDomainConfigurationMap().size()
             + ")";
@@ -1392,6 +1393,21 @@ public class Job implements Serializable {
      */
     public void setResubmittedAsJob(Long resubmittedAsJob) {
         this.resubmittedAsJobWithID = resubmittedAsJob;
-        
     }
+    
+    /**
+     * @return max running time in seconds 
+     */
+    public long getForceMaxRunningSeconds() {
+        return this.forceMaxRunningSeconds;
+    }
+    
+    // TODO update forceMaxRunningSeconds 
+    //<long name="max-time-sec">0</long>
+
+    
+    
+    
+    
+    
 }

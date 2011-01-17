@@ -79,6 +79,9 @@ public class SnapshotHarvestDefinition {
         long byteLimit = HTMLUtils.parseOptionalLong(context,
                 Constants.DOMAIN_BYTELIMIT_PARAM,
                 dk.netarkivet.harvester.datamodel.Constants.DEFAULT_MAX_BYTES);
+        long runningtimeLimit = HTMLUtils.parseOptionalLong(context,
+                Constants.JOB_RUNNINGTIMELIMIT_PARAM,
+                dk.netarkivet.harvester.datamodel.Constants.DEFAULT_MAX_JOB_RUNNING_TIME);
 
         Long oldHarvestId = HTMLUtils.parseOptionalLong(context,
                 Constants.OLDSNAPSHOT_PARAM, null);
@@ -102,7 +105,7 @@ public class SnapshotHarvestDefinition {
             }
             // Note, object/bytelimit set to default values, if not set
             hd = new FullHarvest(name, comments, oldHarvestId, objectLimit,
-                                 byteLimit);
+                                 byteLimit, runningtimeLimit);
             hd.setActive(false);
             hddao.create(hd);
         } else {
