@@ -146,6 +146,16 @@ public class FullHarvest extends HarvestDefinition {
     public long getMaxBytes() {
         return maxBytes;
     }
+ 
+    /**
+     * Set the limit for how many bytes this fullharvest will harvest per
+     * domain, or -1 for no limit.
+     *
+     * @param maxBytes Number of bytes to stop harvesting at.
+     */
+    public void setMaxBytes(long maxBytes) {
+        this.maxBytes = maxBytes;
+    }
     
     /**
      * 
@@ -156,13 +166,13 @@ public class FullHarvest extends HarvestDefinition {
     }
     
     /**
-     * Set the limit for how many bytes this fullharvest will harvest per
-     * domain, or -1 for no limit.
+     * Set the limit for how many seconds each crawljob in this fullharvest
+     * will run, or 0 for no limit.
      *
-     * @param maxBytes Number of bytes to stop harvesting at.
+     * @param maxJobRunningtime max number of seconds
      */
-    public void setMaxBytes(long maxBytes) {
-        this.maxBytes = maxBytes;
+    public void setMaxJobRunningTime(long maxJobRunningtime) {
+        this.maxJobRunningTime = maxJobRunningtime;
     }
 
     /**

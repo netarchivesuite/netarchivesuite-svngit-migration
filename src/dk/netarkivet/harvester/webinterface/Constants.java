@@ -80,7 +80,7 @@ public class Constants {
 
     public static final String DOMAIN_BYTELIMIT_PARAM = "snapshot_byte_limit";
     
-    public static final String JOB_RUNNINGTIMELIMIT_PARAM = "snapshot_seconds_limit";
+    public static final String JOB_TIMELIMIT_PARAM = "snapshot_time_limit";
 
     public static final String CREATENEW_PARAM = "createnew";
 

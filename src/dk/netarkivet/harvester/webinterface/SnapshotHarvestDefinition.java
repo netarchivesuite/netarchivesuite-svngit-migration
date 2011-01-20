@@ -80,7 +80,7 @@ public class SnapshotHarvestDefinition {
                 Constants.DOMAIN_BYTELIMIT_PARAM,
                 dk.netarkivet.harvester.datamodel.Constants.DEFAULT_MAX_BYTES);
         long runningtimeLimit = HTMLUtils.parseOptionalLong(context,
-                Constants.JOB_RUNNINGTIMELIMIT_PARAM,
+                Constants.JOB_TIMELIMIT_PARAM,
                 dk.netarkivet.harvester.datamodel.Constants.DEFAULT_MAX_JOB_RUNNING_TIME);
 
         Long oldHarvestId = HTMLUtils.parseOptionalLong(context,
@@ -133,14 +133,20 @@ public class SnapshotHarvestDefinition {
             }
 
             // MaxBytes is set to
-            // dk.netarkivet.harvestdefinition.Constants.DEFAULT_MAX_BYTES
-            // if parameter byteLimit is not defined
+            // dk.netarkivet.harvester.datamodel.Constants.DEFAULT_MAX_BYTES
+            // if parameter snapshot_byte_Limit is not defined
             hd.setMaxBytes(byteLimit);
 
             // MaxCountObjects is set to
-            // dk.netarkivet.harvestdefinition.Constants.DEFAULT_MAX_OBJECTS
-            // if parameter objectLimit is not defined
+            // dk.netarkivet.harvester.datamodel.Constants.DEFAULT_MAX_OBJECTS
+            // if parameter snapshot_object_limit is not defined
             hd.setMaxCountObjects(objectLimit);
+            
+            // MaxJobRunningTime is set to
+            // dk.netarkivet.harvester.datamodel.Constants.DEFAULT_MAX_JOB_RUNNING_TIME
+            // if parameter snapshot_time_limit is not defined
+            hd.setMaxJobRunningTime(runningtimeLimit);
+            
             hd.setPreviousHarvestDefinition(oldHarvestId);
             hd.setComments(comments);
             hddao.update(hd);
