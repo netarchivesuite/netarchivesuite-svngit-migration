@@ -223,4 +223,29 @@ public class PostgreSQLSpecifics extends DBSpecifics {
         DBConnect.updateTable("runningJobsMonitor", 1);  
     }
 
+    // Below DB changes introduced with development release 3.15
+    // with changes to tables 'configurations', 'fullharvests', and 'jobs'.
+    
+    @Override
+    protected void migrateConfigurationsv4tov5() {
+        // Update configurations table to version 5
+        String[] sqlStatements 
+            = {"ALTER TABLE configurations ALTER COLUMN maxobjects TYPE bigint" };
+        DBConnect.updateTable("configurations", 5, sqlStatements);
+    }
+
+    @Override
+    protected void migrateFullharvestsv3tov4() {
+        // Update fullharvests table to version 4
+        String[] sqlStatements 
+            = {"ALTER TABLE fullharvests ADD COLUMN maxjobrunningtime bigint NOT NULL DEFAULT 0"};
+        DBConnect.updateTable("fullharvests", 4, sqlStatements);     
+    }
+
+    @Override
+    protected void migrateJobsv5tov6() {
+        String[] sqlStatements 
+        = {"ALTER TABLE jobs ADD COLUMN forcemaxrunningtime bigint NOT NULL DEFAULT 0 AFTER forcemaxcount"};
+    DBConnect.updateTable("jobs", 6, sqlStatements);     
+    }
 }

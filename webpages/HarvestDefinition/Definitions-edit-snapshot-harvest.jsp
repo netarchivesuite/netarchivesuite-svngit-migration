@@ -165,14 +165,14 @@ harvestName (Constants.HARVEST_SNAPSHOT_PARAM):
         <tr> <!-- edit area for max job running time -->
             <%
             long dftMaxJobRunningTime =
-                Settings.get(HarvesterSettingdk.netarkivet.harvester.datamodel.Constants.DEFAULT_MAX_BYTES;
+                dk.netarkivet.harvester.datamodel.Constants.DEFAULT_MAX_JOB_RUNNING_TIME;
             %>
             <td><fmt:message key="prompt;max.bytes.per.domain"/></td>
             <td><input 
                 name="<%= Constants.DOMAIN_BYTELIMIT_PARAM %>"
                 size="20" 
                 value="<%= HTMLUtils.localiseLong(
-                    (hd != null ? hd.getMaxJobrunningTime() : dftMaxJobRunningTime), 
+                    (hd != null ? hd.getMaxJobRunningTime() : dftMaxJobRunningTime), 
                     pageContext)                
                    %>"/>
              </td>

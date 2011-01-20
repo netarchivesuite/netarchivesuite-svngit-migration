@@ -56,7 +56,7 @@ create table schemaversions (
 insert into schemaversions ( tablename, version ) 
     values ( 'domains', 2);
 insert into schemaversions ( tablename, version ) 
-    values ( 'configurations', 4);
+    values ( 'configurations', 5);
 insert into schemaversions ( tablename, version ) 
     values ( 'seedlists', 1);
 insert into schemaversions ( tablename, version ) 
@@ -74,7 +74,7 @@ insert into schemaversions ( tablename, version )
 insert into schemaversions ( tablename, version ) 
     values ( 'partialharvests', 1);
 insert into schemaversions ( tablename, version ) 
-    values ( 'fullharvests', 3);
+    values ( 'fullharvests', 4);
 insert into schemaversions ( tablename, version ) 
     values ( 'harvest_configs', 1);
 insert into schemaversions ( tablename, version ) 
@@ -82,7 +82,7 @@ insert into schemaversions ( tablename, version )
 insert into schemaversions ( tablename, version ) 
     values ( 'ordertemplates', 1);
 insert into schemaversions ( tablename, version ) 
-    values ( 'jobs', 5);
+    values ( 'jobs', 6);
 insert into schemaversions ( tablename, version ) 
     values ( 'job_configs', 1);
 insert into schemaversions (tablename, version )
@@ -426,7 +426,7 @@ create table jobs (
     num_configs int not null default 0,  -- Number of configurations in the
                                          --  job, autocreated for optimization
                                          --  purposes
-    max_running_time bigint not null,	-- Max number of seconds that the harvester 
+    maxjobrunningtime bigint not null default 0, -- Max number of seconds that the harvester 
                                         -- can work on this job
     edition bigint not null   -- Marker for optimistic locking by web interface
 );

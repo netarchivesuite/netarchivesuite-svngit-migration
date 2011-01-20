@@ -62,7 +62,7 @@ public class HarvestDefinitionDBDAO extends HarvestDefinitionDAO {
     /** The logger. */
     private final Log log = LogFactory.getLog(getClass());
     /** The current version needed of the table 'fullharvests'. */
-    static final int FULLHARVESTS_VERSION_NEEDED = 3;
+    static final int FULLHARVESTS_VERSION_NEEDED = 4;
 
     /** Create a new HarvestDefinitionDAO using database.
      */
@@ -78,11 +78,15 @@ public class HarvestDefinitionDBDAO extends HarvestDefinitionDAO {
                     + FULLHARVESTS_VERSION_NEEDED);
             DBSpecifics.getInstance().updateTable("fullharvests", 
                     FULLHARVESTS_VERSION_NEEDED);
+        } else {
+            log.info("Database 'fullharvests' should already be uptodate at version "
+                    + fullharvestsVersion);
         }
         
         DBUtils.checkTableVersion(connection,
                                   "harvestdefinitions", 2);
-        DBUtils.checkTableVersion(connection, "fullharvests", 3);
+        DBUtils.checkTableVersion(connection, "fullharvests", 
+                FULLHARVESTS_VERSION_NEEDED);
         DBUtils.checkTableVersion(connection, "partialharvests", 1);
         DBUtils.checkTableVersion(connection, "harvest_configs", 1);
     }
@@ -502,7 +506,8 @@ public class HarvestDefinitionDBDAO extends HarvestDefinitionDAO {
                 s = c.prepareStatement("UPDATE fullharvests SET "
                         + "previoushd = ?, "
                         + "maxobjects = ?, "
-                        + "maxbytes = ? "
+                        + "maxbytes = ?, "
+                        + "maxjobrunningtime = ? "
                         + "WHERE harvest_id = ?");
                 if (fh.getPreviousHarvestDefinition() != null) {
                     s.setLong(1, fh.getPreviousHarvestDefinition().getOid());
@@ -511,8 +516,10 @@ public class HarvestDefinitionDBDAO extends HarvestDefinitionDAO {
                 }
                 s.setLong(2, fh.getMaxCountObjects());
                 s.setLong(3, fh.getMaxBytes());
-                s.setLong(4, fh.getOid());
+                s.setLong(4, fh.getMaxJobRunningTime());
+                s.setLong(5, fh.getOid());
                 rows = s.executeUpdate();
+                log.debug(rows + " fullharvests records updated");
             } else if (hd instanceof PartialHarvest) {
                 PartialHarvest ph = (PartialHarvest) hd;
                 s = c.prepareStatement("UPDATE partialharvests SET "
@@ -525,6 +532,7 @@ public class HarvestDefinitionDBDAO extends HarvestDefinitionDAO {
                 DBUtils.setDateMaybeNull(s, 2, ph.getNextDate());
                 s.setLong(3, ph.getOid());
                 rows = s.executeUpdate();
+                log.debug(rows + " partialharvests records updated");
                 s.close();
                 createHarvestConfigsEntries(c, ph, ph.getOid());
             } else {

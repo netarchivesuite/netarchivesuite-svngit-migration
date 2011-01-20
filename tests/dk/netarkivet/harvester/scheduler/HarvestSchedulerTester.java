@@ -120,7 +120,7 @@ public class HarvestSchedulerTester extends TestCase {
                 RememberNotifications.class.getName());
 
         harvestScheduler = new HarvestScheduler();
-
+        HarvestDefinitionDAO.getInstance();
         HarvestJobGeneratorTest.generateJobs(new Date());
     }
 

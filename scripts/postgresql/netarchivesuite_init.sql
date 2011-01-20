@@ -48,7 +48,7 @@ CREATE TABLE schemaversions (
 INSERT INTO schemaversions ( tablename, version )
     VALUES ( 'domains', 2);
 INSERT INTO schemaversions ( tablename, version )
-    VALUES ( 'configurations', 4);
+    VALUES ( 'configurations', 5);
 INSERT INTO schemaversions ( tablename, version )
     VALUES ( 'seedlists', 1);
 INSERT INTO schemaversions ( tablename, version )
@@ -66,7 +66,7 @@ INSERT INTO schemaversions ( tablename, version )
 INSERT INTO schemaversions ( tablename, version )
     VALUES ( 'partialharvests', 1);
 INSERT INTO schemaversions ( tablename, version )
-    VALUES ( 'fullharvests', 3);
+    VALUES ( 'fullharvests', 4);
 INSERT INTO schemaversions ( tablename, version )
     VALUES ( 'harvest_configs', 1);
 INSERT INTO schemaversions ( tablename, version )
@@ -74,7 +74,7 @@ INSERT INTO schemaversions ( tablename, version )
 INSERT INTO schemaversions ( tablename, version )
     VALUES ( 'ordertemplates', 1);
 INSERT INTO schemaversions ( tablename, version )
-    VALUES ( 'jobs', 5);
+    VALUES ( 'jobs', 6);
 INSERT INTO schemaversions ( tablename, version )
     VALUES ( 'job_configs', 1);
 INSERT INTO schemaversions ( tablename, version )
@@ -118,7 +118,7 @@ CREATE TABLE configurations (
     comments varchar(30000),
     domain_id bigint NOT NULL,
     template_id bigint NOT NULL,
-    maxobjects int,
+    maxobjects bigint,
     maxrate int,
     overridelimits int,
     maxbytes bigint NOT NULL DEFAULT -1
@@ -256,7 +256,8 @@ CREATE TABLE fullharvests (
      harvest_id bigint NOT NULL PRIMARY KEY,
      maxobjects bigint NOT NULL,
      previoushd bigint,
-     maxbytes bigint NOT NULL default -1
+     maxbytes bigint NOT NULL default -1,
+     maxjobrunningtime bigint NOT NULL default 0
 );
 
 GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE fullharvests TO netarchivesuite;
@@ -338,6 +339,7 @@ CREATE TABLE jobs (
     priority int NOT NULL,
     forcemaxbytes bigint NOT NULL default -1,
     forcemaxcount bigint,
+    forcemaxrunningtime bigint NOT NULL default 0,
     orderxml varchar(300) NOT NULL,
     orderxmldoc text NOT NULL,
     seedlist text NOT NULL,
