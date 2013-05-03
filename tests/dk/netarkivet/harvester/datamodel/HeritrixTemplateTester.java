@@ -27,7 +27,7 @@ package dk.netarkivet.harvester.datamodel;
 import dk.netarkivet.common.exceptions.ArgumentNotValid;
 import dk.netarkivet.common.utils.XmlUtils;
 import junit.framework.TestCase;
-import org.archive.crawler.deciderules.DecidingScope;
+//import org.archive.crawler.deciderules.DecidingScope;
 import org.dom4j.Document;
 import org.dom4j.DocumentFactory;
 import org.dom4j.Node;
@@ -268,18 +268,26 @@ public class HeritrixTemplateTester extends TestCase {
         assertEquals("should have equal contents", templateAsXML, doc.asXML());
     }
     
-    public void testForDecidingScope() {
-        
-        File f = new File(TestInfo.TOPDATADIR, "default_orderxml.xml");
-        Document doc = XmlUtils.getXmlDoc(f);        
-        String xpath = "/crawl-order/controller/newObject[@name='scope']"
-            + "[@class='" + DecidingScope.class.getName()
-            + "']";
-        Node node = doc.selectSingleNode(xpath);
-        assertTrue("DecidingScope not found in order.xml", node != null);
-        HeritrixTemplate ht = new HeritrixTemplate(doc);
-        assertTrue("Order not verified", ht.isVerified());
-    }
+    /** The Scope-classes has been replaced by a scope bean. 
+     * <!-- SCOPE: rules for which discovered URIs to crawl; order is very 
+      important because last decision returned other than 'NONE' wins. -->
+ <bean id="scope" class="org.archive.modules.deciderules.DecideRuleSequence">
+  <property name="rules">
+     * 
+     * */
+    
+//    public void testForDecidingScope() {
+//        
+//        File f = new File(TestInfo.TOPDATADIR, "default_orderxml.xml");
+//        Document doc = XmlUtils.getXmlDoc(f);        
+//        String xpath = "/crawl-order/controller/newObject[@name='scope']"
+//            + "[@class='" + DecidingScope.class.getName()
+//            + "']";
+//        Node node = doc.selectSingleNode(xpath);
+//        assertTrue("DecidingScope not found in order.xml", node != null);
+//        HeritrixTemplate ht = new HeritrixTemplate(doc);
+//        assertTrue("Order not verified", ht.isVerified());
+//    }
     
 //    public void testRemovalOfDeduplicator() {
 //        File f = new File(TestInfo.TOPDATADIR, "default_orderxml.xml");

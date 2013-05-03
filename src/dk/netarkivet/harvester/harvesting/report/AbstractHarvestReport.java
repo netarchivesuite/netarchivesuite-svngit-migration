@@ -38,7 +38,6 @@ import java.util.Set;
 import org.apache.commons.httpclient.URIException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.archive.crawler.datamodel.CrawlURI;
 import org.archive.net.UURI;
 
 import dk.netarkivet.common.exceptions.ArgumentNotValid;
@@ -453,7 +452,15 @@ public abstract class AbstractHarvestReport implements HarvestReport {
                                             + "'.", e);
                     }
                 }
-                if (response == CrawlURI.S_BLOCKED_BY_QUOTA) {
+                //FIXME NEEDS REFACTORING 
+                //The datastructure CrawlURI.S_BLOCKED_BY_QUOTA is now found:
+                // org.archive.modules.fetcher.FetchStatusCodes.S_BLOCKED_BY_QUOTA
+                
+                //if (response == CrawlURI.S_BLOCKED_BY_QUOTA) {
+                
+                if (response == org.archive.modules.fetcher.FetchStatusCodes.S_BLOCKED_BY_QUOTA) {  
+                
+                
                     if (annotation.trim().equals("Q:group-max-all-kb")) {
                         stopReason = StopReason.SIZE_LIMIT;
                     } else if (annotation.trim()

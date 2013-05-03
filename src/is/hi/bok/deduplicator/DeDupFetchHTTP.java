@@ -39,12 +39,12 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermRangeFilter;
 import org.apache.lucene.store.FSDirectory;
-import org.archive.crawler.datamodel.CrawlURI;
-import org.archive.crawler.fetcher.FetchHTTP;
 import org.archive.crawler.frontier.AdaptiveRevisitAttributeConstants;
 import org.archive.crawler.settings.SimpleType;
 import org.archive.crawler.settings.Type;
 import org.archive.httpclient.HttpRecorderMethod;
+import org.archive.modules.CrawlURI;
+import org.archive.modules.fetcher.FetchHTTP;
 import org.archive.util.ArchiveUtils;
 
 import dk.netarkivet.common.utils.AllDocsCollector;
@@ -212,7 +212,6 @@ implements AdaptiveRevisitAttributeConstants {
             unchangedURLs++;
             curi.putInt(A_CONTENT_STATE_KEY, CONTENT_UNCHANGED);
             curi.addAnnotation("header-duplicate");
-
         }
         
         return ret;

@@ -51,7 +51,8 @@ import java.util.regex.Pattern;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.archive.crawler.deciderules.MatchesListRegExpDecideRule;
+import org.archive.modules.deciderules.MatchesListRegexDecideRule;
+//import org.archive.crawler.deciderules.MatchesListRegExpDecideRule;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.Node;
@@ -598,12 +599,18 @@ public class Job implements Serializable, JobInfo {
         }
         Element rulesMap = (Element) rulesMapNode;
 
-        //Add all regexps in the list to a single MatchesListRegExpDecideRule
+        // TODO The deciderule "org.archive.crawler.deciderules.MatchesListRegExpDecideRule"
+        // no longer exists in H3, 
+        // replaced by org.archive.modules.deciderules.MatchesListRegexDecideRule
+        
+        
+        
+        //Add all regexps in the list to a single MatchesListRegexDecideRule
         //which is appended to the rulesMapNode.
         Element deciderule = rulesMap.addElement("newObject");
         deciderule.addAttribute("name", elementName);
         deciderule.addAttribute("class",
-                MatchesListRegExpDecideRule.class.getName()
+                MatchesListRegexDecideRule.class.getName()
             );
 
         Element decision = deciderule.addElement("string");

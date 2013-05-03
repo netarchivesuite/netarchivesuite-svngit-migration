@@ -28,7 +28,7 @@ import java.io.File;
 
 import junit.framework.TestCase;
 import org.apache.commons.httpclient.URIException;
-import org.archive.crawler.datamodel.CandidateURI;
+//import org.archive.crawler.datamodel.CandidateURI;
 import org.archive.net.UURI;
 
 import dk.netarkivet.common.exceptions.ArgumentNotValid;

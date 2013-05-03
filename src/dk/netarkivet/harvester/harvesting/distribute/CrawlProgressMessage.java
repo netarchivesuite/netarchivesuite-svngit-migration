@@ -410,6 +410,9 @@ implements Serializable {
      * Checks whether Heritrix has finished crawling the job.
      *
      * @return true if Heritrix has finished crawling the job, false otherwise.
+     * 
+     * FIXME "CrawlController.FINISHED" should be changed to 
+     * "CrawlController.State.FINISHED"
      */
     public boolean crawlIsFinished() {
 
@@ -422,7 +425,8 @@ implements Serializable {
 
         String statusAsString = getJobStatus().getStatus();
         if (statusAsString != null) {
-            return statusAsString.equals(CrawlController.FINISHED);
+            // FIXME change "CrawlController.FINISHED" to CrawlController.State.FINISHED
+            return statusAsString.equals("CrawlController.FINISHED");
         }
         return false;
     }

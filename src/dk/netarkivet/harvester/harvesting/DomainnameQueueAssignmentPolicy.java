@@ -26,9 +26,8 @@ package dk.netarkivet.harvester.harvesting;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.archive.crawler.datamodel.CandidateURI;
-import org.archive.crawler.framework.CrawlController;
 import org.archive.crawler.frontier.HostnameQueueAssignmentPolicy;
+import org.archive.net.UURI;
 
 import dk.netarkivet.common.utils.DomainUtils;
 
@@ -39,6 +38,9 @@ import dk.netarkivet.common.utils.DomainUtils;
  * x.y.z -> y.z
  * y.z -> y.z
  * nn.nn.nn.nn -> nn.nn.nn.nn
+ * 
+ * FIXME The CandidateURI class is gone. 
+ * FIXME The getClassKey is replaced by an getCoreKey(UURI basis) 
  */
 public class DomainnameQueueAssignmentPolicy
         extends HostnameQueueAssignmentPolicy {
@@ -62,15 +64,40 @@ public class DomainnameQueueAssignmentPolicy
      *  org.archive.crawler.framework.CrawlController,
      *  org.archive.crawler.datamodel.CandidateURI)
      */
-     public String getClassKey(CrawlController controller, CandidateURI cauri) {
-        String candidate;
+    
+//     public String getClassKey(CrawlController controller, CandidateURI cauri) {
+//        String candidate;
+//        try {
+//            // Since getClassKey has no contract, we must encapsulate it from
+//            // errors.
+//            candidate = super.getClassKey(controller, cauri);
+//        } catch (NullPointerException e) {
+//            log.debug("Heritrix broke getting class key candidate for "
+//                      + cauri);
+//            candidate = DEFAULT_CLASS_KEY;
+//        }
+//        String[] hostnameandportnr = candidate.split("#");
+//        if (hostnameandportnr.length == 0 || hostnameandportnr.length > 2) {
+//            return candidate;
+//        }
+//        String domainName = DomainUtils.domainNameFromHostname(hostnameandportnr[0]);
+//        if (domainName == null) { // Not valid according to our rules
+//            log.debug("Illegal class key candidate '" + candidate
+//                      + "' for '" + cauri + "'");
+//            return candidate;
+//        }
+//        return domainName;
+//    }
+    @Override
+    protected String getCoreKey(UURI basis) {
+        String candidate; 
         try {
             // Since getClassKey has no contract, we must encapsulate it from
             // errors.
-            candidate = super.getClassKey(controller, cauri);
+            candidate = super.getCoreKey(basis);
         } catch (NullPointerException e) {
             log.debug("Heritrix broke getting class key candidate for "
-                      + cauri);
+                    + basis);
             candidate = DEFAULT_CLASS_KEY;
         }
         String[] hostnameandportnr = candidate.split("#");
@@ -80,9 +107,10 @@ public class DomainnameQueueAssignmentPolicy
         String domainName = DomainUtils.domainNameFromHostname(hostnameandportnr[0]);
         if (domainName == null) { // Not valid according to our rules
             log.debug("Illegal class key candidate '" + candidate
-                      + "' for '" + cauri + "'");
+                    + "' for '" + basis + "'");
             return candidate;
         }
         return domainName;
     }
+ 
 }

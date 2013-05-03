@@ -31,8 +31,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
@@ -41,11 +43,14 @@ import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.archive.io.ArchiveRecord;
+import org.archive.io.WriterPoolSettings;
+import org.archive.io.arc.ARCConstants;
 import org.archive.io.arc.ARCReader;
 import org.archive.io.arc.ARCReaderFactory;
 import org.archive.io.arc.ARCRecord;
 import org.archive.io.arc.ARCRecordMetaData;
 import org.archive.io.arc.ARCWriter;
+import org.archive.io.arc.WriterPoolSettingsData;
 import org.archive.util.ArchiveUtils;
 
 import dk.netarkivet.common.Constants;
@@ -149,15 +154,24 @@ public final class ARCUtils {
         PrintStream ps = null;
         try {
             ps = new PrintStream(new FileOutputStream(newFile));
-            aw = new ARCWriter(
-                    new AtomicInteger(), ps,
-                    //This name is used for the first (file metadata) record
-                    newFile, 
-                    false, //Don't compress
-                    //Use current time
-                    ArchiveUtils.get14DigitDate(System.currentTimeMillis()),
-                    null //No particular file metadata to add
-            );
+            List<String> metadata = new ArrayList<String>();
+            List<File> outputDirs = new ArrayList<File>();
+            outputDirs.add(newFile.getParentFile());
+            // FIXME: change prefix and template to something meaningful in this context
+            WriterPoolSettings wps 
+                = new WriterPoolSettingsData("prefix", "template", 
+                        ARCConstants.DEFAULT_MAX_ARC_FILE_SIZE, false, outputDirs, metadata);
+            aw = new ARCWriter(new AtomicInteger(), ps, newFile, wps);
+            
+//            aw = new ARCWriter(
+//                    new AtomicInteger(), ps,
+//                    //This name is used for the first (file metadata) record
+//                    newFile, 
+//                    false, //Don't compress
+//                    //Use current time
+//                    ArchiveUtils.get14DigitDate(System.currentTimeMillis()),
+//                    null //No particular file metadata to add
+//            );
         } catch (IOException e) {
             if (ps != null) {
                 ps.close();
@@ -222,14 +236,25 @@ public final class ARCUtils {
      */
     public static ARCWriter getToolsARCWriter(PrintStream stream,
             File destinationArcfile) throws IOException {
-        return
-            new ARCWriter(new AtomicInteger(), stream,
-                destinationArcfile,
-                false, //Don't compress
-                // Use current time
-                ArchiveUtils.get14DigitDate(System.currentTimeMillis()),
-                null // //No particular file metadata to add
-                );
+        
+        List<String> metadata = new ArrayList<String>();
+        List<File> outputDirs = new ArrayList<File>();
+        outputDirs.add(destinationArcfile.getParentFile());
+        // FIXME: change prefix and template to something meaningful in this context
+        WriterPoolSettings wps 
+            = new WriterPoolSettingsData("prefix", "template", 
+                    ARCConstants.DEFAULT_MAX_ARC_FILE_SIZE, false, outputDirs, metadata);
+        return 
+                new ARCWriter(new AtomicInteger(), stream, destinationArcfile, wps);
+//        
+//                
+//            new ARCWriter(new AtomicInteger(), stream,
+//                destinationArcfile,
+//                false, //Don't compress
+//                // Use current time
+//                ArchiveUtils.get14DigitDate(System.currentTimeMillis()),
+//                null // //No particular file metadata to add
+//                );
     }
     
     /** 

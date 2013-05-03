@@ -25,8 +25,11 @@
 
 package dk.netarkivet.harvester.harvesting;
 
-import org.archive.crawler.datamodel.CrawlURI;
-import org.archive.crawler.framework.Processor;
+//import org.archive.crawler.datamodel.CrawlURI;
+//import org.archive.crawler.framework.Processor;
+
+import org.archive.modules.CrawlURI;
+import org.archive.modules.Processor;
 
 import dk.netarkivet.common.exceptions.ArgumentNotValid;
 
@@ -47,9 +50,10 @@ public class ContentSizeAnnotationPostProcessor extends Processor {
      * @see Processor
      */
     public ContentSizeAnnotationPostProcessor(String name) {
-        super(name, "A post processor that adds an annotation"
-                    + " content-size:<bytes> for each successfully harvested"
-                    + " URI.");
+//        super(name, "A post processor that adds an annotation"
+//                    + " content-size:<bytes> for each successfully harvested"
+//                    + " URI.");
+        super();
     }
 
     /** For each URI with a successful status code (status code > 0),
@@ -62,8 +66,23 @@ public class ContentSizeAnnotationPostProcessor extends Processor {
     protected void innerProcess(CrawlURI crawlURI) throws InterruptedException {
         ArgumentNotValid.checkNotNull(crawlURI, "CrawlURI crawlURI");
         if (crawlURI.getFetchStatus() > 0) {
-            crawlURI.addAnnotation(CONTENT_SIZE_ANNOTATION_PREFIX
-                                   + crawlURI.getContentSize());
+            // FIXME addAnnotation method is gone:
+            // maybe we can should use addExtraInfo method instead
+            
+            //crawlURI.addAnnotation(CONTENT_SIZE_ANNOTATION_PREFIX
+            //                       + crawlURI.getContentSize());
+            
+            crawlURI.addExtraInfo(CONTENT_SIZE_ANNOTATION_PREFIX, crawlURI.getContentSize());
         }
+    }
+
+    @Override
+    protected boolean shouldProcess(CrawlURI arg0) {
+        if (arg0.isSuccess()) { 
+            // TODO or maybe just: arg0.is2XXSuccess()
+            // or maybe just: ?
+            return true;
+        }
+        return false;
     }
 }

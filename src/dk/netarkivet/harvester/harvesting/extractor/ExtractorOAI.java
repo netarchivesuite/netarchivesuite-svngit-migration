@@ -31,10 +31,13 @@ import java.util.regex.Matcher;
 import org.apache.commons.httpclient.URIException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.archive.crawler.datamodel.CrawlURI;
-import org.archive.crawler.extractor.Extractor;
-import org.archive.crawler.extractor.Link;
+//import org.archive.crawler.datamodel.CrawlURI;
+//import org.archive.crawler.extractor.Extractor;
+//import org.archive.crawler.extractor.Link;
 import org.archive.io.ReplayCharSequence;
+import org.archive.modules.CrawlURI;
+import org.archive.modules.extractor.Extractor;
+import org.archive.modules.extractor.Link;
 import org.archive.net.UURI;
 import org.archive.util.TextUtils;
 
@@ -88,9 +91,10 @@ public class ExtractorOAI extends Extractor {
      * @param name the name of this extractor
      */
     public ExtractorOAI(String name) {
-        super(name, "Extractor which finds the resumptionToken in an OAI "
-                    + "listMetadata query and adds the next page of results "
-                    + "to the crawl");
+        //super(name, "Extractor which finds the resumptionToken in an OAI "
+        //            + "listMetadata query and adds the next page of results "
+        //            + "to the crawl");
+        super();
     }
 
     /**
@@ -101,9 +105,10 @@ public class ExtractorOAI extends Extractor {
      */
     @Override
     protected void extract(CrawlURI curi) {
-         if (!isHttpTransactionContentToProcess(curi)) {
-            return;
-        }
+        // FIXME: code needs refactoring to work again
+        //if (!isHttpTransactionContentToProcess(curi)) {
+        //    return;
+        //}
         String mimeType = curi.getContentType();
         if (mimeType == null) {
             return;
@@ -124,7 +129,10 @@ public class ExtractorOAI extends Extractor {
         this.numberOfCURIsHandled++;
         ReplayCharSequence cs = null;
         try {
-            cs = curi.getHttpRecorder().getReplayCharSequence();
+            //FIXME needs refactoring to work in H3
+            //cs = curi.getHttpRecorder().getReplayCharSequence();
+            throw new IOException(); //FIXME inserted to avoid compile-error.
+            
         } catch (IOException e) {
             log.error("Failed getting ReplayCharSequence: " + e.getMessage());
         }
@@ -159,6 +167,7 @@ public class ExtractorOAI extends Extractor {
      */
     public boolean processXml(CrawlURI curi, CharSequence cs) {
         Matcher m = TextUtils.getMatcher(RESUMPTION_TOKEN_MATCH, cs);
+        
         boolean matches = m.find();
         if (matches) {
             String token = m.group(1);
@@ -169,8 +178,10 @@ public class ExtractorOAI extends Extractor {
                 URI newUri = new URI(oldUri.getScheme(), oldUri.getAuthority(),
                                      oldUri.getPath(),
                                      newQueryPart, oldUri.getFragment());
-                curi.createAndAddLink(newUri.toString(), Link.NAVLINK_MISC,
-                                      Link.NAVLINK_HOP);
+                // FIXME needs refactoring to
+                //curi.createAndAddLink(newUri.toString(), Link.NAVLINK_MISC,
+                //                      Link.NAVLINK_HOP);
+               
             } catch (URISyntaxException e) {
                 log.error(e);
             } catch (URIException e) {
@@ -194,6 +205,12 @@ public class ExtractorOAI extends Extractor {
         ret.append("  Links extracted:   " + this.numberOfLinksExtracted
                 + "\n\n");
         return ret.toString();
+    }
+
+    @Override
+    protected boolean shouldProcess(CrawlURI arg0) {
+        //FIXME needs to be implemented 
+        return false;
     }
 
 }

@@ -47,9 +47,11 @@ public class OnNSDomainsDecideRuleTester extends TestCase {
         /*
          First testing that the original way of making URls to SURTs behaves right on domains
          */
-        assertEquals("http://(dk,dr,www,",SurtPrefixSet.prefixFromPlain("www.dr.dk"));
+        // FIXME SurtPrefixSet.prefixFromPlain method replaced by prefixFromPlainForceHttp
+        // Is this method OK to use instead
+        assertEquals("http://(dk,dr,www,",SurtPrefixSet.prefixFromPlainForceHttp(("www.dr.dk")));
 
-        assertEquals("http://(dk,dr,",SurtPrefixSet.prefixFromPlain("http://dr.dk"));
+        assertEquals("http://(dk,dr,",SurtPrefixSet.prefixFromPlainForceHttp("http://dr.dk"));
 
         /*
          Then testing using OnNSDomainsDecideRule - that defines the domain
@@ -74,14 +76,16 @@ public class OnNSDomainsDecideRuleTester extends TestCase {
 
         /*
          Testing using the convertPrefixToHost used by OnHostsDecideRule
+         // FIXME SurtPrefixSet.prefixFromPlain method replaced by prefixFromPlainForceHttp
+        // Is this method OK to use instead
          */
         assertEquals("http://(dk,tv2,sporten,)",
                 SurtPrefixSet.convertPrefixToHost(
-                        SurtPrefixSet.prefixFromPlain("http://sporten.tv2.dk/fodbold/")));
+                        SurtPrefixSet.prefixFromPlainForceHttp("http://sporten.tv2.dk/fodbold/")));
 
         assertEquals("http://(com,blogspot,jmvietnam07,)",
                 SurtPrefixSet.convertPrefixToHost(
-                        SurtPrefixSet.prefixFromPlain("jmvietnam07.blogspot.com/")));
+                        SurtPrefixSet.prefixFromPlainForceHttp("jmvietnam07.blogspot.com/")));
 
     }
 
@@ -90,21 +94,26 @@ public class OnNSDomainsDecideRuleTester extends TestCase {
         /*
          Testing using the 'original' way of transforming URLs to SURTs
          used by SurtPrefixesDecideRule
+         
+         // FIXME SurtPrefixSet.prefixFromPlain method replaced by prefixFromPlainForceHttp
+        // Is this method OK to use instead
          */
 
         assertEquals("http://(com,geocities,www,)/athens/2344/",
-                SurtPrefixSet.prefixFromPlain("http://www.geocities.com/Athens/2344/"));
+                SurtPrefixSet.prefixFromPlainForceHttp("http://www.geocities.com/Athens/2344/"));
 
         assertEquals("http://(com,geocities,www,)/athens/2344/",
-                SurtPrefixSet.prefixFromPlain("http://www.geocities.com/Athens/2344/index.php"));
+                SurtPrefixSet.prefixFromPlainForceHttp("http://www.geocities.com/Athens/2344/index.php"));
 
     }
 
     public void testSURTprefixConversionNonValidDomain() throws Exception {
 
+     // FIXME SurtPrefixSet.prefixFromPlain method replaced by prefixFromPlainForceHttp
+        // Is this method OK to use instead
         assertEquals(OnNSDomainsDecideRule.NON_VALID_DOMAIN,
                 SurtPrefixSet.convertPrefixToHost(
-                        SurtPrefixSet.prefixFromPlain("http:/not?valid;bla%¤/(")));
+                        SurtPrefixSet.prefixFromPlainForceHttp("http:/not?valid;bla%¤/(")));
 
     }
 

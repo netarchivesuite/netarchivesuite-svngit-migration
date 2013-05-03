@@ -72,5 +72,12 @@
 	<classpathentry kind="lib" path="lib/heritrix/lib/heritrix-engine-3.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/heritrix/lib/heritrix-modules-3.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/heritrix/lib/spring-context-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/heritrix/lib/spring-aop-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/heritrix/lib/spring-asm-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/heritrix/lib/spring-beans-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/heritrix/lib/spring-core-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/heritrix/lib/spring-expression-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/heritrix/lib/guava-r08.jar"/>
+	<classpathentry kind="lib" path="lib/heritrix/lib/json-20090211.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

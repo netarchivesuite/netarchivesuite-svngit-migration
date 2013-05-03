@@ -24,7 +24,7 @@
 */
 package dk.netarkivet.harvester.datamodel;
 
-import org.archive.crawler.deciderules.DecidingScope;
+//import org.archive.crawler.deciderules.DecidingScope;
 import org.dom4j.Document;
 import org.dom4j.Node;
 import java.util.regex.Pattern;
@@ -44,7 +44,15 @@ import dk.netarkivet.common.exceptions.ArgumentNotValid;
  * Information about the Heritrix crawler, and its processes and modules
  * can be found in the Heritrix developer and user manuals found on
  * <a href="http://crawler.archive.org">http://crawler.archive.org<a/>
- */
+ * 
+ * 
+ * /** The Scope-classes has been replaced by a scope bean. 
+     * <!-- SCOPE: rules for which discovered URIs to crawl; order is very 
+      important because last decision returned other than 'NONE' wins. -->
+ <bean id="scope" class="org.archive.modules.deciderules.DecideRuleSequence">
+  <property name="rules">
+     * 
+     * */
 public class HeritrixTemplate {
     /** the dom4j Document hiding behind this instance of HeritrixTemplate. */
     private Document template;
@@ -85,11 +93,13 @@ public class HeritrixTemplate {
     public static final String HERITRIX_FROM_XPATH =
             "/crawl-order/controller/map[@name='http-headers']/"
             + "string[@name='from']";
-    /** Xpath to check, that all templates use the DecidingScope. */
-    public static final String DECIDINGSCOPE_XPATH =
-            "/crawl-order/controller/newObject[@name='scope']"
-            + "[@class='" + DecidingScope.class.getName()
-            + "']";
+    
+//    /** Xpath to check, that all templates use the DecidingScope. */
+//    public static final String DECIDINGSCOPE_XPATH =
+//            "/crawl-order/controller/newObject[@name='scope']"
+//            + "[@class='" + DecidingScope.class.getName()
+//            + "']";
+//    
     /**
      * Xpath for the deduplicator node in order.xml documents.
      */

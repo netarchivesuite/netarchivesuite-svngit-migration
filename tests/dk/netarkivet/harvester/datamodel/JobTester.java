@@ -49,8 +49,8 @@ import java.util.logging.LogManager;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.archive.crawler.deciderules.DecideRuleSequence;
-import org.archive.crawler.deciderules.MatchesListRegExpDecideRule;
+import org.archive.modules.deciderules.DecideRuleSequence;
+import org.archive.modules.deciderules.MatchesListRegexDecideRule;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -705,14 +705,15 @@ public class JobTester extends DataModelTestCase {
 
         // Check that there are no crawlertraps for the first domain and exactly
         // the right two in the second domain
+        // FIXME changed class "MatchesListRegExpDecideRule" to "MatchesListRegexDecideRule"
  
         String domain1CrawlerTrapsXpath = "/crawl-order/controller/newObject[@name='scope']/newObject[@class='"
             + DecideRuleSequence.class.getName() + "']/map[@name='rules']/"
-            + "/newObject[@name='" + domain1name +"'][@class='" + MatchesListRegExpDecideRule.class.getName()  + "']";
+            + "/newObject[@name='" + domain1name +"'][@class='" + MatchesListRegexDecideRule.class.getName()  + "']";
   
         String domain2CrawlerTrapsXpath = "/crawl-order/controller/newObject[@name='scope']/newObject[@class='"
             + DecideRuleSequence.class.getName() + "']/map[@name='rules']/"
-            + "/newObject[@name='" + domain2name +"'][@class='" + MatchesListRegExpDecideRule.class.getName()  + "']";
+            + "/newObject[@name='" + domain2name +"'][@class='" + MatchesListRegexDecideRule.class.getName()  + "']";
        
         j.getOrderXMLdoc().normalize();
         List<Node> nodes = j.getOrderXMLdoc().selectNodes(domain1CrawlerTrapsXpath);

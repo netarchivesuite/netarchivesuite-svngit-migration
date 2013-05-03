@@ -28,8 +28,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.httpclient.URIException;
-import org.archive.crawler.datamodel.CandidateURI;
-import org.archive.crawler.deciderules.SurtPrefixedDecideRule;
+import org.archive.modules.CrawlURI;
+import org.archive.modules.deciderules.surt.SurtPrefixedDecideRule;
+//import org.archive.crawler.datamodel.CandidateURI;
+//import org.archive.crawler.deciderules.SurtPrefixedDecideRule;
 import org.archive.net.UURIFactory;
 import org.archive.util.ArchiveUtils;
 import org.archive.util.SurtPrefixSet;
@@ -57,14 +59,15 @@ public class OnNSDomainsDecideRule extends SurtPrefixedDecideRule {
      * @param s The name of this DecideRule
      */
     public OnNSDomainsDecideRule(String s) {
-        super(s);
-        setDescription(
-                "OnNSDomainsDecideRule. Makes the configured decision "
-                + "for any URI which is inside one of the domains in the "
-                + "configured set of domains - according to the domain "
-                + "definition of the NetarchiveSuite system. "
-                + "Giving that e.g. sports.tv2.dk will resolve to tv2.dk"
-                + " but www.bbc.co.uk will resolve to bbc.co.uk");
+        super();
+        //super(s);
+        //setDescription(
+//                "OnNSDomainsDecideRule. Makes the configured decision "
+//                + "for any URI which is inside one of the domains in the "
+//                + "configured set of domains - according to the domain "
+//                + "definition of the NetarchiveSuite system. "
+//                + "Giving that e.g. sports.tv2.dk will resolve to tv2.dk"
+//                + " but www.bbc.co.uk will resolve to bbc.co.uk");
     }
     
     /**
@@ -123,7 +126,8 @@ public class OnNSDomainsDecideRule extends SurtPrefixedDecideRule {
      */
     protected String prefixFrom(String uri) {
         uri = ArchiveUtils.addImpliedHttpIfNecessary(uri);
-        return SurtPrefixSet.prefixFromPlain(convertToDomain(uri));
+        //FIXME is this correct now ? 
+        return SurtPrefixSet.prefixFromPlainForceHttp(convertToDomain(uri));
     }
 
     /**
@@ -144,8 +148,11 @@ public class OnNSDomainsDecideRule extends SurtPrefixedDecideRule {
             // allow to continue with original string uri
         }
         try {
-            return policy.getClassKey(
-                    null, CandidateURI.fromString(u.toString()));
+            //FIXME the below two lines does not compile 
+            throw new URIException(); // FIXME inserted to avoid compile-error
+            
+            //return policy.getClassKey(
+            //        null, CandidateURI.fromString(u.toString()));
         } catch (URIException e) {
             // illegal URI - return a SURT that will not match any real URIs
             return NON_VALID_DOMAIN;

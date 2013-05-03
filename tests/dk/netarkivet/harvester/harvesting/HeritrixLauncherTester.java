@@ -346,7 +346,7 @@ public class HeritrixLauncherTester extends TestCase {
              * First test tests that www.netarkivet.dk goes into a queue called: netarkivet.dk
              */
             uri = UURIFactory.getInstance("http://www.netarkivet.dk/foo/bar.cgi");
-            cauri = new CandidateURI(uri);
+            cauri = getCandidateUri(uri);
             assertEquals("Should get base domain name from normal URL",
                          dqap.getClassKey(new CrawlController(),cauri),"netarkivet.dk");
 
@@ -369,6 +369,10 @@ public class HeritrixLauncherTester extends TestCase {
         } catch (URIException e) {
             fail("Should not throw exception on valid URI's");
         }
+    }
+
+    private CandidateURI getCandidateUri(UURI uri) {
+        return new CandidateURI(uri);
     }
 
     /**

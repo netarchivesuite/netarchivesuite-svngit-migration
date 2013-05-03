@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.archive.io.warc.WARCWriter;
+import org.archive.io.warc.WARCWriterPoolSettings;
 import org.archive.util.anvl.ANVLRecord;
 
 public class WARCWriterNAS extends WARCWriter {
@@ -34,7 +35,9 @@ public class WARCWriterNAS extends WARCWriter {
             final boolean cmprs, final String a14DigitDate,
             final List<String> warcinfoData)
     throws IOException {
-        super(serialNo, out, f, cmprs, a14DigitDate, warcinfoData);
+        //WARCWriterPoolSettings settings = new A
+        //super(serialNo, out, f, cmprs, a14DigitDate, warcinfoData);
+        super(serialNo, out, f, settings);
     }
 
     /**
