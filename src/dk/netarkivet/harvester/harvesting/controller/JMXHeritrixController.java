@@ -35,7 +35,7 @@ import dk.netarkivet.harvester.HarvesterSettings;
 import dk.netarkivet.harvester.harvesting.HeritrixFiles;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.archive.util.JmxUtils;
+//import org.archive.util.JmxUtils;
 
 import javax.management.openmbean.CompositeData;
 import javax.management.openmbean.TabularData;
@@ -47,6 +47,7 @@ import java.util.Collection;
  * as a separate process and uses JMX to communicate with it.  Each instance
  * executes exactly one process that runs exactly one crawl job.
  * @deprecated Use the {@link BnfHeritrixController} instead
+ * @deprecated this code does not work any more, as Heritrix no longer responds to JMX
  */
 public class JMXHeritrixController extends AbstractJMXHeritrixController {
     /** The logger for this class. */
@@ -335,7 +336,9 @@ public class JMXHeritrixController extends AbstractJMXHeritrixController {
         if (jobs != null && jobs.size() > 0) {
             for (CompositeData value
                     : (Collection<CompositeData>) jobs.values()) {
-                String thisJobID = value.get(JmxUtils.NAME)
+            	// FIXME this code does not work any more, as Heritrix no longer responds to JMX
+            	// and as the JmxUtils class no longer exists
+                String thisJobID = value.get("JmxUtils.NAME")
                                    + "-" + value.get(UID_PROPERTY);
                 if (thisJobID.equals(jobName)) {
                     return true;
@@ -435,7 +438,9 @@ public class JMXHeritrixController extends AbstractJMXHeritrixController {
             // is malformed.  The job will then die as soon as we tell it to
             // start crawling.
             CompositeData job = JMXUtils.getOneCompositeData(pendingJobs);
-            String name = job.get(JmxUtils.NAME)
+         // FIXME this code does not work any more, as Heritrix no longer responds to JMX
+        	// and as the JmxUtils class no longer exists
+            String name = job.get("JmxUtils.NAME")
                           + "-" + job.get(UID_PROPERTY);
             log.info("Heritrix created a job with name " + name);
             return name;
@@ -535,12 +540,14 @@ public class JMXHeritrixController extends AbstractJMXHeritrixController {
      * @return Bean name, to be passed into JMXUtils#getBeanName(String)
      */
     private String getHeritrixBeanName() {
-        return "org.archive.crawler:"
-               + JmxUtils.NAME + "=Heritrix,"
-               + JmxUtils.TYPE + "=CrawlService,"
-               + JmxUtils.JMX_PORT + "=" + getJMXPort() + ","
-               + JmxUtils.GUI_PORT + "=" + getGUIPort() + ","
-               + JmxUtils.HOST + "=" + getHostName();
+        return "org.archive.crawler:";
+     // FIXME this code does not work any more, as Heritrix no longer responds to JMX
+    	// and as the JmxUtils class no longer exists
+//               + JmxUtils.NAME + "=Heritrix,"
+//               + JmxUtils.TYPE + "=CrawlService,"
+//               + JmxUtils.JMX_PORT + "=" + getJMXPort() + ","
+//               + JmxUtils.GUI_PORT + "=" + getGUIPort() + ","
+//               + JmxUtils.HOST + "=" + getHostName();
 
     }
 
@@ -550,12 +557,14 @@ public class JMXHeritrixController extends AbstractJMXHeritrixController {
      * @return Bean name, to be passed into JMXUtils#getBeanName(String)
      */
     private String getCrawlJobBeanName() {
-        return "org.archive.crawler:"
-               + JmxUtils.NAME + "=" + jobName + ","
-               + JmxUtils.TYPE + "=CrawlService.Job,"
-               + JmxUtils.JMX_PORT + "=" + getJMXPort() + ","
-               + JmxUtils.MOTHER + "=Heritrix,"
-              + JmxUtils.HOST + "=" + getHostName();
+        return "org.archive.crawler:";
+     // FIXME this code does not work any more, as Heritrix no longer responds to JMX
+    	// and as the JmxUtils class no longer exists
+//               + JmxUtils.NAME + "=" + jobName + ","
+//               + JmxUtils.TYPE + "=CrawlService.Job,"
+//               + JmxUtils.JMX_PORT + "=" + getJMXPort() + ","
+//               + JmxUtils.MOTHER + "=Heritrix,"
+//              + JmxUtils.HOST + "=" + getHostName();
     }
 
     /** Get the JMX connector to Heritrix.

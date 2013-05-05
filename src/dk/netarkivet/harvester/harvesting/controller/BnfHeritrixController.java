@@ -36,7 +36,7 @@ import dk.netarkivet.harvester.harvesting.frontier.FullFrontierReport;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.archive.crawler.framework.CrawlController;
-import org.archive.util.JmxUtils;
+//import org.archive.util.JmxUtils;
 
 import javax.management.*;
 import javax.management.openmbean.CompositeData;
@@ -51,6 +51,7 @@ import java.util.List;
  * This implementation of the HeritrixController interface starts Heritrix as a
  * separate process and uses JMX to communicate with it. Each instance executes
  * exactly one process that runs exactly one crawl job.
+ * @deprecated this code does not work any more, as Heritrix no longer responds to JMX
  */
 public class BnfHeritrixController extends AbstractJMXHeritrixController {
 
@@ -247,11 +248,12 @@ public class BnfHeritrixController extends AbstractJMXHeritrixController {
         
         log.info("JMX connection initialized successfully");
 
-        crawlServiceBeanName = "org.archive.crawler:" + JmxUtils.NAME
-                + "=Heritrix," + JmxUtils.TYPE + "=CrawlService,"
-                + JmxUtils.JMX_PORT + "=" + getJmxPort() + ","
-                + JmxUtils.GUI_PORT + "=" + getGuiPort() + "," + JmxUtils.HOST
-                + "=" + getHostName();
+// 	FIXME this code does not work any more, as Heritrix no longer responds to JMX
+//        crawlServiceBeanName = "org.archive.crawler:" + JmxUtils.NAME
+//                + "=Heritrix," + JmxUtils.TYPE + "=CrawlService,"
+//                + JmxUtils.JMX_PORT + "=" + getJmxPort() + ","
+//                + JmxUtils.GUI_PORT + "=" + getGuiPort() + "," + JmxUtils.HOST
+//                + "=" + getHostName();
 
         // We want to be sure there are no jobs when starting, in case we got
         // an old Heritrix or somebody added jobs behind our back.
@@ -276,12 +278,12 @@ public class BnfHeritrixController extends AbstractJMXHeritrixController {
                 getJobDescription(), files.getSeedsTxtFile().getAbsolutePath());
 
         jobName = getJobName();
-
-        crawlServiceJobBeanName = "org.archive.crawler:" + JmxUtils.NAME + "="
-                + jobName + "," + JmxUtils.TYPE + "=CrawlService.Job,"
-                + JmxUtils.JMX_PORT + "=" + getJmxPort() + ","
-                + JmxUtils.MOTHER + "=Heritrix," + JmxUtils.HOST + "="
-                + getHostName();
+// FIXME this code does not work any more, as Heritrix no longer responds to JMX
+//        crawlServiceJobBeanName = "org.archive.crawler:" + JmxUtils.NAME + "="
+//                + jobName + "," + JmxUtils.TYPE + "=CrawlService.Job,"
+//                + JmxUtils.JMX_PORT + "=" + getJmxPort() + ","
+//                + JmxUtils.MOTHER + "=Heritrix," + JmxUtils.HOST + "="
+//                + getHostName();
     }
 
     @Override
@@ -506,9 +508,9 @@ public class BnfHeritrixController extends AbstractJMXHeritrixController {
                 jStatus.setStatus(newStatus);
                 if (value != null) {
                     String status = (String) value;
-                    if (CrawlController.PAUSING.equals(status)) {
+                    if (CrawlController.State.PAUSING.equals(status)) {
                         cpm.setStatus(CrawlStatus.CRAWLER_PAUSING);
-                    } else if (CrawlController.PAUSED.equals(status)) {
+                    } else if (CrawlController.State.PAUSED.equals(status)) {
                         cpm.setStatus(CrawlStatus.CRAWLER_PAUSED);
                     } else {
                         cpm.setStatus(CrawlStatus.CRAWLER_ACTIVE);
@@ -608,7 +610,9 @@ public class BnfHeritrixController extends AbstractJMXHeritrixController {
             // is malformed. The job will then die as soon as we tell it to
             // start crawling.
             CompositeData job = JMXUtils.getOneCompositeData(pendingJobs);
-            String name = job.get(JmxUtils.NAME) + "-" + job.get(UID_PROPERTY);
+            // FIXME this code does not work any more, as Heritrix no longer responds to JMX
+            //String name = job.get(JmxUtils.NAME) + "-" + job.get(UID_PROPERTY);
+            String name = job.get("JmxUtils.NAME") + "-" + job.get(UID_PROPERTY);
             log.info("Heritrix created a job with name " + name);
             return name;
         }
@@ -683,7 +687,7 @@ public class BnfHeritrixController extends AbstractJMXHeritrixController {
                 continue;
             }
 
-            if (CrawlController.FINISHED.equals(status)) {
+            if (CrawlController.State.FINISHED.equals(status)) {
                 log.info(crawlServiceJobBeanName
                         + " status is FINISHED, report generation is complete."
                         + " Exiting wait loop.");

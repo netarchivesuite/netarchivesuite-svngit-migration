@@ -319,15 +319,16 @@ public class ARCUtilsTester extends TestCase {
      * @param arcfile the destination arcfile
      * @throws IOException
      * @return new ARCWriter 
+     * FIXME ALWAYS RETURNS NULL NOW. Needs to be fixed to work with H3-libraries
      */
     public static ARCWriter getTestARCWriter(PrintStream stream, File arcfile)
     throws IOException {
-        return 
-            new ARCWriter(new AtomicInteger(), stream, arcfile, 
-                    false, //Don't compress
-                    ArchiveUtils.get14DigitDate(System.currentTimeMillis()), //Use current time
-                    null //No particular file metadata to add
-                    );
+        return null;
+//            new ARCWriter(new AtomicInteger(), stream, arcfile, 
+//                    false, //Don't compress
+//                    ArchiveUtils.get14DigitDate(System.currentTimeMillis()), //Use current time
+//                    null //No particular file metadata to add
+//                    );
     }
     
 }

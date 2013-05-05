@@ -29,10 +29,12 @@ import java.util.NoSuchElementException;
 import org.apache.commons.httpclient.URIException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.archive.crawler.datamodel.CandidateURI;
-import org.archive.crawler.datamodel.CoreAttributeConstants;
+//import org.archive.crawler.datamodel.CandidateURI;
+//import org.archive.crawler.datamodel.CoreAttributeConstants;
 import org.archive.crawler.framework.CrawlController;
 import org.archive.crawler.frontier.HostnameQueueAssignmentPolicy;
+import org.archive.modules.CoreAttributeConstants;
+import org.archive.modules.CrawlURI;
 import org.archive.net.UURIFactory;
 
 import dk.netarkivet.common.utils.DomainUtils;
@@ -74,16 +76,18 @@ public class SeedUriDomainnameQueueAssignmentPolicy
      *  org.archive.crawler.framework.CrawlController,
      *  org.archive.crawler.datamodel.CandidateURI)
      */
-     public String getClassKey(CrawlController controller, CandidateURI cauri) {
+     public String getClassKey(CrawlURI cauri) {
         String candidate;
         
         boolean ignoreSourceSeed =
                 cauri != null &&
-                cauri.getCandidateURIString().startsWith("dns");
+                //cauri.getCandidateURIString().startsWith("dns");
+                //FIXME verify this refactoring
+        		cauri.getCanonicalString().startsWith("dns");
         try {
             // Since getClassKey has no contract, we must encapsulate it from
             // errors.
-            candidate = super.getClassKey(controller, cauri);
+            candidate = super.getClassKey(cauri);
         } catch (NullPointerException e) {
             log.debug("Heritrix broke getting class key candidate for "
                       + cauri);
@@ -120,10 +124,13 @@ public class SeedUriDomainnameQueueAssignmentPolicy
       * @param cauri A potential URI
       * @return a candidate from the source or null if none found
       */
-    private String getCandidateFromSource(CandidateURI cauri) {
+    private String getCandidateFromSource(CrawlURI cauri) {
         String sourceCandidate = null;  
         try {
-            sourceCandidate = cauri.getString(CoreAttributeConstants.A_SOURCE_TAG);
+            //sourceCandidate = cauri.getString(CoreAttributeConstants.A_SOURCE_TAG);
+        	//FIXME verify if this does the check
+        	//maybe it doesn't throw an exception, but returns null or "" if it isn't set
+        	sourceCandidate = cauri.getSourceTag(); 
         } catch (NoSuchElementException e) {
             log.warn("source-tag-seeds not set in Heritrix template!");
             return null;

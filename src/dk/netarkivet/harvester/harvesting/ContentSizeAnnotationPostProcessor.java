@@ -66,13 +66,10 @@ public class ContentSizeAnnotationPostProcessor extends Processor {
     protected void innerProcess(CrawlURI crawlURI) throws InterruptedException {
         ArgumentNotValid.checkNotNull(crawlURI, "CrawlURI crawlURI");
         if (crawlURI.getFetchStatus() > 0) {
-            // FIXME addAnnotation method is gone:
-            // maybe we can should use addExtraInfo method instead
-            
+
             //crawlURI.addAnnotation(CONTENT_SIZE_ANNOTATION_PREFIX
             //                       + crawlURI.getContentSize());
-            
-            crawlURI.addExtraInfo(CONTENT_SIZE_ANNOTATION_PREFIX, crawlURI.getContentSize());
+            crawlURI.getAnnotations().add(CONTENT_SIZE_ANNOTATION_PREFIX + crawlURI.getContentSize());
         }
     }
 

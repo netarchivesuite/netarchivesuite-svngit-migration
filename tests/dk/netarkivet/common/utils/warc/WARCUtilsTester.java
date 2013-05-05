@@ -87,12 +87,13 @@ public class WARCUtilsTester extends TestCase {
      */
     public static WARCWriter getTestWARCWriter(PrintStream stream, File warcfile)
     throws IOException {
-        return 
-            new WARCWriterNAS(new AtomicInteger(), stream, warcfile, 
-                    false, //Don't compress
-                    ArchiveUtils.get14DigitDate(System.currentTimeMillis()), //Use current time
-                    null //No particular file metadata to add
-                    );
+        return null;
+        //FIXME change code to adhere to new H3 libraries
+//            new WARCWriterNAS(new AtomicInteger(), stream, warcfile, 
+//                    false, //Don't compress
+//                    ArchiveUtils.get14DigitDate(System.currentTimeMillis()), //Use current time
+//                    null //No particular file metadata to add
+//                    );
     }
 
     public void testWarcCopy() {

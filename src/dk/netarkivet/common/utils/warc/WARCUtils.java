@@ -74,19 +74,20 @@ public class WARCUtils {
      * @return new WARCWriter, writing to warcfile newFile.
      */
     public static WARCWriter createWARCWriter(File newFile) {
-        WARCWriter writer;
+        WARCWriter writer= null;
         PrintStream ps = null;
         try {
             ps = new PrintStream(new FileOutputStream(newFile));
-            writer = new WARCWriterNAS(
-                    new AtomicInteger(), ps,
-                    //This name is used for the first (file metadata) record
-                    newFile, 
-                    false, //Don't compress
-                    //Use current time
-                    ArchiveDateConverter.getWarcDateFormat().format(new Date()),
-                    null //No particular file metadata to add
-            );
+            //FIXME change code to adhere to new H3 libraries
+//            writer = new WARCWriterNAS(
+//                    new AtomicInteger(), ps,
+//                    //This name is used for the first (file metadata) record
+//                    newFile, 
+//                    false, //Don't compress
+//                    //Use current time
+//                    ArchiveDateConverter.getWarcDateFormat().format(new Date()),
+//                    null //No particular file metadata to add
+//            );
         } catch (IOException e) {
             if (ps != null) {
                 ps.close();

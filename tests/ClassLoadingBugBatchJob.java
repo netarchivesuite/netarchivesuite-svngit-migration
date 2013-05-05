@@ -36,11 +36,12 @@ public class ClassLoadingBugBatchJob extends ARCBatchJob {
             throw new RuntimeException(e);
         }
 
-        try {
-            os.write(("\n"+UURIFactory.IGNORED_SCHEME+"\n").getBytes());            
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+ //FIXME UURIFactory.IGNORED_SCHEME does no longer exist.
+//        try {
+//            os.write(("\n" + UURIFactory.IGNORED_SCHEME + "\n").getBytes());            
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
         UURI uuri = null;
         try {
             uuri = new UURI("http://foo.bar", false){

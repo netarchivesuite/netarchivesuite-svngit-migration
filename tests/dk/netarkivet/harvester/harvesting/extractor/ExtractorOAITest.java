@@ -25,16 +25,21 @@ package dk.netarkivet.harvester.harvesting.extractor;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
 import java.util.Collection;
 
 import junit.framework.TestCase;
 import org.apache.commons.httpclient.URIException;
-import org.archive.crawler.datamodel.CrawlURI;
-import org.archive.crawler.extractor.Extractor;
-import org.archive.crawler.extractor.Link;
+//import org.archive.crawler.datamodel.CrawlURI;
+//import org.archive.crawler.extractor.Extractor;
+//import org.archive.crawler.extractor.Link;
 import org.archive.io.ReplayCharSequence;
+import org.archive.modules.CrawlURI;
+import org.archive.modules.extractor.Extractor;
+import org.archive.modules.extractor.Link;
 import org.archive.net.UURIFactory;
-import org.archive.util.HttpRecorder;
+//import org.archive.util.HttpRecorder;
 
 public class ExtractorOAITest extends TestCase {
 
@@ -87,6 +92,30 @@ public class ExtractorOAITest extends TestCase {
         public CharSequence subSequence(int start, int end) {
             return seq.subSequence(start, end);
         }
+
+		@Override
+		public Charset getCharset() {
+			// FIXME Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public CharacterCodingException getCodingException() {
+			// FIXME Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public long getDecodeExceptionCount() {
+			// FIXME Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public boolean isOpen() {
+			// FIXME Auto-generated method stub
+			return false;
+		}
     }
 
     /**
@@ -95,25 +124,28 @@ public class ExtractorOAITest extends TestCase {
      */
     public void testExtract() throws URIException, InterruptedException {
         CrawlURI curi = new CrawlURI(UURIFactory.getInstance(uri)) {
-            @Override
-            public HttpRecorder getHttpRecorder() {
-                return new HttpRecorder(new File("/"),"") {
-                    @Override
-                    public ReplayCharSequence getReplayCharSequence()
-                            throws IOException {
-                        return new TestReplayCharSequence(xmlText);
-                    }
-                };
-            }
+// FIXME Needs rewriting in order to work with H3 code
+//            @Override
+//            public HttpRecorder getHttpRecorder() {
+//                return new HttpRecorder(new File("/"),"") {
+//                    @Override
+//                    public ReplayCharSequence getReplayCharSequence()
+//                            throws IOException {
+//                        return new TestReplayCharSequence(xmlText);
+//                    }
+//                };
+//            }
         } ;
         curi.setContentType("text/xml");
         Extractor x = new ExtractorOAI("foobar"){
-            @Override
+        	// FIXME Needs rewriting in order to work with H3 code
+            //@Override
             protected boolean isHttpTransactionContentToProcess(CrawlURI curi) {
                 return true;
             }
         };
-        x.innerProcess(curi);
+        // FIXME innerProcess method visible in Extractor
+        //x.innerProcess(curi);
         Collection<Link> links = curi.getOutLinks();
         Link link1 = links.iterator().next();
         assertTrue(link1.getDestination().toString().contains("resumptionToken=foobar"));
