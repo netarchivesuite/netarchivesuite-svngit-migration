@@ -46,10 +46,10 @@ import java.util.Collection;
  * This implementation of the HeritrixController interface starts Heritrix
  * as a separate process and uses JMX to communicate with it.  Each instance
  * executes exactly one process that runs exactly one crawl job.
- * @deprecated Use the {@link BnfHeritrixController} instead
+ * @deprecated Use the {@link BnfHeritrixControllerBasedRestController} instead
  * @deprecated this code does not work any more, as Heritrix no longer responds to JMX
  */
-public class JMXHeritrixController extends AbstractJMXHeritrixController {
+public class JMXHeritrixController extends AbstractRESTHeritrixController {
     /** The logger for this class. */
     private static final Log log = LogFactory.getLog(
             JMXHeritrixController.class);

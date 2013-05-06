@@ -42,7 +42,7 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * BnF specific Heritrix launcher, that forces the use of
- * {@link BnfHeritrixController}. Every turn of the crawl control loop, asks the
+ * {@link BnfHeritrixControllerBasedRestController}. Every turn of the crawl control loop, asks the
  * Heritrix controller to generate a progress report as a
  * {@link CrawlProgressMessage} and then send this message on the JMS bus to
  * be consumed by the {@link HarvestMonitor} instance.
@@ -112,7 +112,7 @@ public class BnfHeritrixLauncher extends HeritrixLauncher {
         Settings.getLong(HarvesterSettings.FRONTIER_REPORT_WAIT_TIME);
 
     /** The CrawlController used. */
-    private BnfHeritrixController heritrixController;
+    private BnfHeritrixControllerBasedRestController heritrixController;
     /** Is the heritrix crawl finished. */
     private boolean crawlIsOver = false;
 
@@ -158,7 +158,7 @@ public class BnfHeritrixLauncher extends HeritrixLauncher {
      */
     public void doCrawl() throws IOFailure {
         setupOrderfile();
-        heritrixController = new BnfHeritrixController(getHeritrixFiles());
+        heritrixController = new BnfHeritrixControllerBasedRestController(getHeritrixFiles());
 
         PeriodicTaskExecutor exec = null;
         try {

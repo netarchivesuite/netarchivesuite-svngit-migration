@@ -33,7 +33,7 @@ import dk.netarkivet.harvester.harvesting.HeritrixFiles;
 import dk.netarkivet.harvester.harvesting.HeritrixLauncher;
 import dk.netarkivet.harvester.harvesting.HeritrixLauncherFactory;
 import dk.netarkivet.harvester.harvesting.JobInfoTestImpl;
-import dk.netarkivet.harvester.harvesting.controller.AbstractJMXHeritrixController;
+import dk.netarkivet.harvester.harvesting.controller.AbstractRESTHeritrixController;
 import dk.netarkivet.harvester.harvesting.report.AbstractHarvestReport;
 import dk.netarkivet.harvester.harvesting.report.HarvestReport;
 import dk.netarkivet.harvester.harvesting.report.LegacyHarvestReport;
@@ -960,7 +960,7 @@ public class HeritrixTests extends TestCase {
         URL[] urls = null;
         try {
             Method method = ReflectUtils
-                    .getPrivateMethod(AbstractJMXHeritrixController.class,
+                    .getPrivateMethod(AbstractRESTHeritrixController.class,
                                       "updateEnvironment", Map.class);
             Map<String, String> environment
                 = new HashMap<String, String>(System.getenv());

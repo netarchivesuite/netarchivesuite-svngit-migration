@@ -38,14 +38,16 @@ import java.io.*;
 import java.util.*;
 
 /**
- * Abstract base class for JMX-based Heritrix controllers.
+ * Abstract base class for REST-based Heritrix controllers.
+ * 
+ * https://webarchive.jira.com/wiki/display/Heritrix/Running+Heritrix+3.0+and+3.1
  */
-public abstract class AbstractJMXHeritrixController
+public abstract class AbstractRESTHeritrixController
 implements HeritrixController {
 
     /** The logger for this class. */
     private static final Log log = LogFactory
-            .getLog(AbstractJMXHeritrixController.class);
+            .getLog(AbstractRESTHeritrixController.class);
 
     /** File path Separator. Used to separate the jar-files in the classpath. */
     private static final String FILE_PATH_SEPARATOR = ":";
@@ -101,12 +103,13 @@ implements HeritrixController {
      * @param files
      *            Files that are used to set up Heritrix.
      */
-    public AbstractJMXHeritrixController(HeritrixFiles files) {
+    public AbstractRESTHeritrixController(HeritrixFiles files) {
         ArgumentNotValid.checkNotNull(files, "HeritrixFile files");
         this.files = files;
 
         SystemUtils.checkPortNotUsed(guiPort);
-        SystemUtils.checkPortNotUsed(jmxPort);
+        // FIXME jmxPort no longer used
+        //SystemUtils.checkPortNotUsed(jmxPort);
 
         hostName = SystemUtils.getLocalHostName();
 
@@ -166,9 +169,10 @@ implements HeritrixController {
                 String[] add = jvmOptsStr.split(" ");
                 allOpts.addAll(Arrays.asList(add));
             }
-
+/*
             allOpts.add("-Dcom.sun.management.jmxremote.port=" + jmxPort);
             allOpts.add("-Dcom.sun.management.jmxremote.ssl=false");
+            
             // check that JMX password and access files are readable.
             // TODO This should probably be extracted to a method?
             File passwordFile = files.getJmxPasswordFile();
@@ -191,23 +195,25 @@ implements HeritrixController {
                     + new File(pwAbsolutePath));
             allOpts.add("-Dcom.sun.management.jmxremote.access.file="
                     + new File(acAbsolutePath));
+                    
+ */
             allOpts.add("-Dheritrix.out="
                     + heritrixOutputFile.getAbsolutePath());
             allOpts.add("-Djava.protocol.handler.pkgs=org.archive.net");
             allOpts.add("-Ddk.netarkivet.settings.file=" + settingProperty);
             allOpts.add(Heritrix.class.getName());
-            allOpts.add("--bind");
+            allOpts.add("--web-bind-hosts"); 
             allOpts.add("/");
-            allOpts.add("--port=" + guiPort);
+            allOpts.add("--web-port=" + guiPort);
             allOpts.add("--admin=" + getHeritrixAdminName() + ":"
                     + getHeritrixAdminPassword());
 
             String[] args = allOpts.toArray(new String[allOpts.size()]);
             log.info("Starting Heritrix process with args"
                     + Arrays.toString(args));
-            log.debug("The JMX timeout is set to " 
+            /* log.debug("The JMX timeout is set to " 
                     + TimeUtils.readableTimeInterval(JMXUtils.getJmxTimeout()));
-
+            */
             ProcessBuilder builder = new ProcessBuilder(args);
 
             updateEnvironment(builder.environment());
@@ -306,7 +312,9 @@ implements HeritrixController {
         for (File lib : jars) {
             final String jarPath = new File(heritrixLibDir, lib.getName())
                     .getAbsolutePath();
-            if (lib.getName().startsWith("heritrix-")) {
+            // FIXME Is this still true now we have 
+            // Heritrix.jar divided into 3 jars: commons, engine, modules
+            if (lib.getName().startsWith("heritrix-engine")) {
                 // Heritrix should be at the very head, as it redefines some
                 // of the functions in its dependencies (!). Thus, we have to
                 // save it for later insertion at the head.
@@ -318,7 +326,7 @@ implements HeritrixController {
         if (heritixJar != null) {
             classPathParts.add(0, heritixJar);
         } else {
-            throw new IOFailure("Heritrix jar file not found");
+            throw new IOFailure("Heritrix-engine jar file not found");
         }
         environment.put("CLASSPATH", StringUtils.conjoin(FILE_PATH_SEPARATOR,
                 classPathParts));
@@ -438,7 +446,6 @@ implements HeritrixController {
      */
     protected void waitForHeritrixProcessExit() {
         final long maxWait = Settings.getLong(CommonSettings.PROCESS_TIMEOUT);
-        final int maxJmxRetries = JMXUtils.getMaxTries();
         Integer exitValue = ProcessUtils.waitFor(heritrixProcess, maxWait);
         if (exitValue != null) {
             log.info("Heritrix process of " + this + " exited with exit code "
@@ -470,6 +477,8 @@ implements HeritrixController {
         Runtime.getRuntime().removeShutdownHook(processKillerHook);
         // Wait until all collection threads are dead or until we have
         // tried JMXUtils.MAX_TRIES times.
+        // FIXME should we use JMXUtils.getMaxTries for this purpose
+        final int maxJmxRetries = JMXUtils.getMaxTries();
         int attempt = 0;
         do {
             boolean anyAlive = false;

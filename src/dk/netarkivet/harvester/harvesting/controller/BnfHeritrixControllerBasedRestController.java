@@ -51,13 +51,13 @@ import java.util.List;
  * This implementation of the HeritrixController interface starts Heritrix as a
  * separate process and uses JMX to communicate with it. Each instance executes
  * exactly one process that runs exactly one crawl job.
- * @deprecated this code does not work any more, as Heritrix no longer responds to JMX
+ * FIXME this code is in the process of conversion to REST, as Heritrix no longer responds to JMX
  */
-public class BnfHeritrixController extends AbstractJMXHeritrixController {
+public class BnfHeritrixControllerBasedRestController extends AbstractRESTHeritrixController {
 
     /** The logger for this class. */
     private static final Log log = LogFactory
-            .getLog(BnfHeritrixController.class);
+            .getLog(BnfHeritrixControllerBasedRestController.class);
 
     /**
      * The below commands and attributes are copied from the attributes and
@@ -222,7 +222,7 @@ public class BnfHeritrixController extends AbstractJMXHeritrixController {
      * @param files
      *            Files that are used to set up Heritrix.
      */
-    public BnfHeritrixController(HeritrixFiles files) {
+    public BnfHeritrixControllerBasedRestController(HeritrixFiles files) {
         super(files);
     }
 
@@ -244,46 +244,54 @@ public class BnfHeritrixController extends AbstractJMXHeritrixController {
         
         log.info("Abort, if we lose the connection "
                 + "to Heritrix, is " + ABORT_IF_CONN_LOST);  
-        initJMXConnection();
+        //initJMXConnection();
         
-        log.info("JMX connection initialized successfully");
+        //log.info("JMX connection initialized successfully");
 
-// 	FIXME this code does not work any more, as Heritrix no longer responds to JMX
-//        crawlServiceBeanName = "org.archive.crawler:" + JmxUtils.NAME
-//                + "=Heritrix," + JmxUtils.TYPE + "=CrawlService,"
-//                + JmxUtils.JMX_PORT + "=" + getJmxPort() + ","
-//                + JmxUtils.GUI_PORT + "=" + getGuiPort() + "," + JmxUtils.HOST
-//                + "=" + getHostName();
-
-        // We want to be sure there are no jobs when starting, in case we got
-        // an old Heritrix or somebody added jobs behind our back.
-        TabularData doneJobs = (TabularData) executeMBeanOperation(
-                CrawlServiceOperation.completedJobs);
-        TabularData pendingJobs = (TabularData) executeMBeanOperation(
-                CrawlServiceOperation.pendingJobs);
-        if (doneJobs != null && doneJobs.size() > 0 || pendingJobs != null
-                && pendingJobs.size() > 0) {
-            throw new IllegalState(
-                    "This Heritrix instance is in a illegalState! "
-                            + "This instance has either old done jobs ("
-                            + doneJobs + "), or old pending jobs ("
-                            + pendingJobs + ").");
-        }
-        // From here on, we can assume there's only the one job we make.
-        // We'll use the arc file prefix to name the job, since the prefix
-        // already contains the harvest id and job id.
-        HeritrixFiles files = getHeritrixFiles();
-        executeMBeanOperation(CrawlServiceOperation.addJob, files
-                .getOrderXmlFile().getAbsolutePath(), files.getArchiveFilePrefix(),
-                getJobDescription(), files.getSeedsTxtFile().getAbsolutePath());
-
-        jobName = getJobName();
-// FIXME this code does not work any more, as Heritrix no longer responds to JMX
-//        crawlServiceJobBeanName = "org.archive.crawler:" + JmxUtils.NAME + "="
-//                + jobName + "," + JmxUtils.TYPE + "=CrawlService.Job,"
-//                + JmxUtils.JMX_PORT + "=" + getJmxPort() + ","
-//                + JmxUtils.MOTHER + "=Heritrix," + JmxUtils.HOST + "="
-//                + getHostName();
+        log.info("Adding harvest job to Heritrix by REST");
+        // FIXME add code to add job to Heritrix by REST using 
+        // Step 1: Verify that other jobs are not already pending in the Heritrix instance
+        // Step 2: Add harvest job
+        
+        
+        log.info("Harvest job added to Heritrix by REST");
+        
+//// 	Note this code does not work any more, as Heritrix no longer responds to JMX
+////        crawlServiceBeanName = "org.archive.crawler:" + JmxUtils.NAME
+////                + "=Heritrix," + JmxUtils.TYPE + "=CrawlService,"
+////                + JmxUtils.JMX_PORT + "=" + getJmxPort() + ","
+////                + JmxUtils.GUI_PORT + "=" + getGuiPort() + "," + JmxUtils.HOST
+////                + "=" + getHostName();
+//
+//        // We want to be sure there are no jobs when starting, in case we got
+//        // an old Heritrix or somebody added jobs behind our back.
+//        TabularData doneJobs = (TabularData) executeMBeanOperation(
+//                CrawlServiceOperation.completedJobs);
+//        TabularData pendingJobs = (TabularData) executeMBeanOperation(
+//                CrawlServiceOperation.pendingJobs);
+//        if (doneJobs != null && doneJobs.size() > 0 || pendingJobs != null
+//                && pendingJobs.size() > 0) {
+//            throw new IllegalState(
+//                    "This Heritrix instance is in a illegalState! "
+//                            + "This instance has either old done jobs ("
+//                            + doneJobs + "), or old pending jobs ("
+//                            + pendingJobs + ").");
+//        }
+//        // From here on, we can assume there's only the one job we make.
+//        // We'll use the arc file prefix to name the job, since the prefix
+//        // already contains the harvest id and job id.
+//        HeritrixFiles files = getHeritrixFiles();
+//        executeMBeanOperation(CrawlServiceOperation.addJob, files
+//                .getOrderXmlFile().getAbsolutePath(), files.getArchiveFilePrefix(),
+//                getJobDescription(), files.getSeedsTxtFile().getAbsolutePath());
+//
+//        jobName = getJobName();
+//// FIXME this code does not work any more, as Heritrix no longer responds to JMX
+////        crawlServiceJobBeanName = "org.archive.crawler:" + JmxUtils.NAME + "="
+////                + jobName + "," + JmxUtils.TYPE + "=CrawlService.Job,"
+////                + JmxUtils.JMX_PORT + "=" + getJmxPort() + ","
+////                + JmxUtils.MOTHER + "=Heritrix," + JmxUtils.HOST + "="
+////                + getHostName();
     }
 
     @Override

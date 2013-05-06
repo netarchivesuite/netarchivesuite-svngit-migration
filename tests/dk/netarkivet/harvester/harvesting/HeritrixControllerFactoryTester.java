@@ -29,7 +29,7 @@ import dk.netarkivet.common.exceptions.IOFailure;
 import dk.netarkivet.common.utils.FileUtils;
 import dk.netarkivet.common.utils.Settings;
 import dk.netarkivet.harvester.HarvesterSettings;
-import dk.netarkivet.harvester.harvesting.controller.BnfHeritrixController;
+import dk.netarkivet.harvester.harvesting.controller.BnfHeritrixControllerBasedRestController;
 import dk.netarkivet.harvester.harvesting.controller.HeritrixController;
 import dk.netarkivet.harvester.harvesting.controller.HeritrixControllerFactory;
 import dk.netarkivet.testutils.preconfigured.MoveTestFiles;
@@ -86,7 +86,7 @@ public class HeritrixControllerFactoryTester extends TestCase {
         HeritrixController hc
             = HeritrixControllerFactory.getDefaultHeritrixController(files);
         assertTrue("Should have got a JMXHeritricController, not " + hc,
-                hc instanceof BnfHeritrixController);
+                hc instanceof BnfHeritrixControllerBasedRestController);
     }
 
     /**

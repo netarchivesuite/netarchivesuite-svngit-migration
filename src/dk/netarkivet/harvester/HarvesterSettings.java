@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 
 import dk.netarkivet.common.utils.Settings;
 import dk.netarkivet.harvester.harvesting.HarvestDocumentation;
-import dk.netarkivet.harvester.harvesting.controller.BnfHeritrixController;
+import dk.netarkivet.harvester.harvesting.controller.BnfHeritrixControllerBasedRestController;
 import dk.netarkivet.harvester.harvesting.distribute.HarvesterReadyMessage;
 import dk.netarkivet.harvester.harvesting.frontier.TopTotalEnqueuesFilter;
 import dk.netarkivet.harvester.harvesting.report.HarvestReport;
@@ -408,7 +408,7 @@ public class HarvesterSettings {
      * only log a warning, leaving the crawl operator shutting down harvester
      * manually.
      * Default value is true.
-     * @see BnfHeritrixController
+     * @see BnfHeritrixControllerBasedRestController
      */
     public static String ABORT_IF_CONNECTION_LOST =
         "settings.harvester.harvesting.heritrix.abortIfConnectionLost";

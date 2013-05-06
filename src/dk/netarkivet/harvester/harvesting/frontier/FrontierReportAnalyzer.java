@@ -36,7 +36,7 @@ import dk.netarkivet.common.utils.Settings;
 import dk.netarkivet.common.utils.StringUtils;
 import dk.netarkivet.common.utils.TimeUtils;
 import dk.netarkivet.harvester.HarvesterSettings;
-import dk.netarkivet.harvester.harvesting.controller.BnfHeritrixController;
+import dk.netarkivet.harvester.harvesting.controller.BnfHeritrixControllerBasedRestController;
 import dk.netarkivet.harvester.harvesting.distribute.FrontierReportMessage;
 import dk.netarkivet.harvester.harvesting.monitor.HarvestMonitor;
 
@@ -53,7 +53,7 @@ public class FrontierReportAnalyzer implements Runnable {
     static final Log LOG = LogFactory.getLog(
             FrontierReportAnalyzer.class);
     /** The controller used to communicate with the Heritrix instance. */
-    private final BnfHeritrixController heritrixController;
+    private final BnfHeritrixControllerBasedRestController heritrixController;
     /** The last time this Analyzer was executed. */
     private long lastExecTime = System.currentTimeMillis();
 
@@ -63,7 +63,7 @@ public class FrontierReportAnalyzer implements Runnable {
      * Heritrix crawler instance.
      */
     public FrontierReportAnalyzer(
-            BnfHeritrixController heritrixController) {
+            BnfHeritrixControllerBasedRestController heritrixController) {
         super();
         this.heritrixController = heritrixController;
 
