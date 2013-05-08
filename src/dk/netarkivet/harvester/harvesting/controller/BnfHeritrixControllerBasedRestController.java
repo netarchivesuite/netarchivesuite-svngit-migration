@@ -296,11 +296,13 @@ public class BnfHeritrixControllerBasedRestController extends AbstractRESTHeritr
 
     @Override
     public void requestCrawlStart() {
+        // This is the equivalent of launching the job, 
         executeMBeanOperation(CrawlServiceOperation.startCrawling);
     }
 
     @Override
     public void requestCrawlStop(String reason) {
+        
         executeMBeanOperation(CrawlServiceOperation.terminateCurrentJob);
     }
 
