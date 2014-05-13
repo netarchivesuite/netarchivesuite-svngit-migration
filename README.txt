@@ -1,4 +1,4 @@
 Thank you for downloading NetarchiveSuite
 
-Please refer to http://netarchive.dk/suite for documentation and
+Please refer to https://sbforge.org/display/NAS for documentation and
 installation instructions.
