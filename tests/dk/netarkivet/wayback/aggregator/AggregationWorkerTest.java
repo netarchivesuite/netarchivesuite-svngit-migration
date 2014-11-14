@@ -20,12 +20,13 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *  USA
  */
 package dk.netarkivet.wayback.aggregator;
 
 import java.io.File;
+import java.io.FilenameFilter;
 
 import dk.netarkivet.common.utils.FileUtils;
 import dk.netarkivet.common.utils.Settings;
@@ -132,15 +133,48 @@ public class AggregationWorkerTest extends AggregatorTestCase {
         testMaxIntermediateIndexFileLimit();
 
         File[] inputFiles = prepareSourceIndex(new String[] {inputFile155KName});
-        
+
         TestIndex testIndex = new TestIndex();
         testIndex.addIndexesFromFiles(inputFiles);
 
         worker.runAggregation();
 
-        assertNull("Unexpected content of aggregated index after roll-over", testIndex.compareToIndex(AggregationWorker.FINAL_INDEX_FILE));
-        File oldIndexFile = new File(AggregationWorker.indexOutputDir, "wayback.index.1");;
-        assertTrue("No wayback.index.1 present", oldIndexFile.exists());
+        assertNull("Unexpected content of aggregated index after roll-over",
+                   testIndex.compareToIndex(AggregationWorker.FINAL_INDEX_FILE));
 
+        FilenameFilter renamedFileFilter = new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.matches("wayback.*[0-9]+.*cdx");
+            }
+        };
+        File[] renamedFiles = AggregationWorker.indexOutputDir.listFiles(renamedFileFilter);
+        assertTrue("Should exist a renamed file.", renamedFiles.length > 0);
     }
+
+    /**
+     * Tests that the renaming strategy really does create new files each time. By setting the
+     * maximum sizes to 0, we force the creation of a new final file with each aggregation.
+     */
+    public void testRunMultipleRenames() {
+        System.setProperty(WaybackSettings.WAYBACK_AGGREGATOR_MAX_INTERMEDIATE_INDEX_FILE_SIZE, "0");
+        System.setProperty(WaybackSettings.WAYBACK_AGGREGATOR_MAX_MAIN_INDEX_FILE_SIZE, "0");
+        prepareSourceIndex(new String[] {inputFile1Name, inputFile2Name});
+        worker.runAggregation();   //creates first wayback.index
+        prepareSourceIndex(new String[] {inputFile3Name});
+        worker.runAggregation();   //creates first renamed index
+        prepareSourceIndex(new String[] {inputFile109KName});
+        worker.runAggregation();
+        prepareSourceIndex(new String[] {inputFile155KName});
+        worker.runAggregation();
+        FilenameFilter renamedFileFilter = new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.matches(".*wayback.*[0-9]+.*cdx");
+            }
+        };
+        File[] renamedFiles = AggregationWorker.indexOutputDir.listFiles(renamedFileFilter);
+        assertTrue("Should exist more than one renamed file.", renamedFiles.length == 3 );
+    }
+
 }

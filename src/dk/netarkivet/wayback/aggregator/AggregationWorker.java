@@ -28,8 +28,11 @@ package dk.netarkivet.wayback.aggregator;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 
 import dk.netarkivet.common.exceptions.ArgumentNotValid;
 import dk.netarkivet.common.utils.CleanupIF;
@@ -239,7 +242,7 @@ public class AggregationWorker implements CleanupIF {
             > 1024 * Settings.getLong(
                 WaybackSettings.WAYBACK_AGGREGATOR_MAX_MAIN_INDEX_FILE_SIZE)) {
 
-            rolloverFinalIndexFiles();
+            renameFinalIndexFile();
         }
 
         if (!FINAL_INDEX_FILE.exists()) {
@@ -272,37 +275,20 @@ public class AggregationWorker implements CleanupIF {
     }
 
     /**
-     * Copies all the final index files to make room for a new working final
-     * index final. This means copying the files from file_name.N to
-     * file_name.N+1
-     */
-    private void rolloverFinalIndexFiles() {
-        if (log.isInfoEnabled()) {
-            log.info(
-                    "Rolling over the final index files.");
-        }
-
-        // Get a list of all final wayback index files
-        int numberOverFinalIndexFiles = indexOutputDir.list(
-                new FilenameFilter() {
-                    public boolean accept(File dir, String name) {
-                        return name.indexOf(FINAL_INDEX_FILE.getName()) != -1;
-                    }
-                }).length;
-
-        for (int i = numberOverFinalIndexFiles - 1; i >= 0; i--) {
-            String nameOfFileToRename;
-            if (i == 0) {
-                nameOfFileToRename = FINAL_INDEX_FILE.getName();
-            } else {
-                nameOfFileToRename = FINAL_INDEX_FILE.getName() + "." + i;
+         * Give the FINAL_INDEX_FILE (wayback.index) a unique new name.
+         */
+        private void renameFinalIndexFile() {
+            String timestampString = (new SimpleDateFormat("yyyyMMdd-HHmm")).format(new Date());
+            String newFileName = "wayback." + timestampString +".cdx";
+            File fileToRename = new File(indexOutputDir, FINAL_INDEX_FILE.getName());
+            File newFile = new File(indexOutputDir, newFileName);
+            if (newFile.exists()) {
+                //This should be rare outside tests
+                newFileName = UUID.randomUUID().toString() + "." + newFileName;
+                newFile = new File(indexOutputDir, newFileName);
             }
-            File fileToRename = new File(indexOutputDir, nameOfFileToRename);
-            File newName = new File(indexOutputDir,
-                                    FINAL_INDEX_FILE.getName() + "." + (i + 1));
-            fileToRename.renameTo(newName);
+            fileToRename.renameTo(newFile);
         }
-    }
 
     @Override
     public void cleanup() {
