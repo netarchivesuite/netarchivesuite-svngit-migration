@@ -86,7 +86,7 @@ public final class Constants {
     /** Minor version number. */
     public static final int MINORVERSION = 4;
     /** Patch version number. */
-    public static final int PATCHVERSION = 0;
+    public static final int PATCHVERSION = 2;
     /** Current status of code. */
     private static final CodeStatus BUILDSTATUS = CodeStatus.UNSTABLE;
 
@@ -133,11 +133,11 @@ public final class Constants {
     public static String getVersionString() {
         if (BUILDSTATUS.equals(CodeStatus.RELEASE)) {
             return "Version: " + MAJORVERSION + "." + MINORVERSION + "."
-                    + PATCHVERSION + " status " + BUILDSTATUS;
+                    + PATCHVERSION + "_BnF" + " status " + BUILDSTATUS;
         } else {
             String version = "Version: " + MAJORVERSION + "." 
                     + MINORVERSION + "."
-                    + PATCHVERSION + " status " + BUILDSTATUS;
+                    + PATCHVERSION + "_BnF" + " status " + BUILDSTATUS;
             String implementationVersion = Constants.class.getPackage()
                     .getImplementationVersion();
             if (implementationVersion != null) {

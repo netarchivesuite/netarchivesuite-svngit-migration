@@ -678,6 +678,15 @@ public class HarvesterSettings {
      */
     public static String HERITRIX_WARC_WRITE_METADATA = 
     		"settings.harvester.harvesting.heritrix.warc.writeMetadata";
+    
+    /**
+     * <b>settings.harvester.harvesting.heritrix.warc.writeMetadataOutlinks</b>
+     * Represents the 'write-metadata-outlinks' setting in the Heritrix WARCWriterProcessor.
+     * The default is false.
+     */
+    public static String HERITRIX_WARC_WRITE_METADATA_OUTLINKS = 
+            "settings.harvester.harvesting.heritrix.warc.writeMetadataOutlinks";
+    
     /**
      * <b>settings.harvester.harvesting.heritrix.warc.writeRevisitForIdenticalDigests</b>
      * Represents the 'write-revisit-for-identical-digests' setting in the Heritrix WARCWriterProcessor.
