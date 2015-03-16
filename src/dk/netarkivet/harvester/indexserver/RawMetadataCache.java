@@ -132,7 +132,7 @@ public class RawMetadataCache extends FileBasedCache<Long>
                 + id + Constants.METADATA_FILE_PATTERN_SUFFIX
                 + "' on replica '" 
                 + replicaUsed + "'");
-        job.processOnlyFilesMatching(id
+        job.processOnlyFilesMatching("*"+id
                 + Constants.METADATA_FILE_PATTERN_SUFFIX);
         BatchStatus b = arcrep.batch(job, replicaUsed);
         
