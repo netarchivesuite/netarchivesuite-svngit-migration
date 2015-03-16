@@ -79,7 +79,7 @@ public class Reporting {
         ArgumentNotValid.checkPositive(jobid, "jobid");
         FileBatchJob fileListJob = new FileListJob();
         List<String> acceptedPatterns = new ArrayList<String>();
-        acceptedPatterns.add(jobid + metadatafile_suffix);
+        acceptedPatterns.add(".*" + jobid + ".*" + metadatafile_suffix);
         acceptedPatterns.add(harvestprefix + archivefile_suffix);
         fileListJob.processOnlyFilesMatching(acceptedPatterns);
         
@@ -172,7 +172,7 @@ public class Reporting {
         FileBatchJob urlsForDomainBatchJob
                 = new HarvestedUrlsForDomainBatchJob(domain);
         urlsForDomainBatchJob.processOnlyFilesMatching(
-                jobid + metadatafile_suffix);
+                ".*" + jobid + ".*" + metadatafile_suffix);
         return getResultFile(urlsForDomainBatchJob);
     }
     
@@ -216,8 +216,8 @@ public class Reporting {
         ArgumentNotValid.checkPositive(jobid, "jobid");
         ArgumentNotValid.checkNotNullOrEmpty(regexp, "String regexp");
         FileBatchJob crawlLogBatchJob = new CrawlLogLinesMatchingRegexp(regexp);
-        crawlLogBatchJob.processOnlyFilesMatching(jobid
-                + metadatafile_suffix);
+        crawlLogBatchJob.processOnlyFilesMatching(".*" + jobid
+                + ".*" + metadatafile_suffix);
         return getResultFile(crawlLogBatchJob);
     }
     
