@@ -643,6 +643,18 @@ public class HarvesterSettings {
             "settings.harvester.harvesting.metadata.metadataFormat";
 
     /**
+     * <b>settings.harvester.harvesting.metadata.metadataFileNameFormat</b>
+     * The format of the name of the metadata file :
+     * By default, it will be jobID-metadata.1.extension for example
+     * 3161-metadata-1.warc
+     * If the value is "prefix", it will be named like a warc file :
+     * Prefix-61-3161-metadata-1.warc If a prefix is defined, the name of the metadata file will 
+     * default: default (alternative: prefix) 
+     */
+    public static String METADATA_FILENAME_FORMAT =
+            "settings.harvester.harvesting.metadata.metadataFileNameFormat";
+    
+    /**
      * <b>settings.harvester.harvesting.heritrix.archiveFormat</b> The dataformat used by heritrix to write the harvested data.
      * default: warc (alternative: arc) 
      */
@@ -678,6 +690,15 @@ public class HarvesterSettings {
      */
     public static String HERITRIX_WARC_WRITE_METADATA = 
     		"settings.harvester.harvesting.heritrix.warc.writeMetadata";
+    
+    /**
+     * <b>settings.harvester.harvesting.heritrix.warc.writeMetadataOutlinks</b>
+     * Represents the 'write-metadata-outlinks' setting in the Heritrix WARCWriterProcessor.
+     * The default is false.
+     */
+    public static String HERITRIX_WARC_WRITE_METADATA_OUTLINKS = 
+            "settings.harvester.harvesting.heritrix.warc.writeMetadataOutlinks";
+    
     /**
      * <b>settings.harvester.harvesting.heritrix.warc.writeRevisitForIdenticalDigests</b>
      * Represents the 'write-revisit-for-identical-digests' setting in the Heritrix WARCWriterProcessor.

@@ -196,6 +196,8 @@ public class HeritrixTemplate {
     		WARCWRITERPROCESSOR_XPATH + "/boolean[@name='write-requests']";
     public static final String WARCS_WRITE_METADATA_XPATH =
     		WARCWRITERPROCESSOR_XPATH + "/boolean[@name='write-metadata']";
+    public static final String WARCS_WRITE_METADATA_OUTLINKS_XPATH =
+            WARCWRITERPROCESSOR_XPATH + "/boolean[@name='write-metadata-outlinks']";
     public static final String WARCS_SKIP_IDENTICAL_DIGESTS_XPATH =
     		WARCWRITERPROCESSOR_XPATH + "/boolean[@name='skip-identical-digests']";
     public static final String WARCS_WRITE_REVISIT_FOR_IDENTICAL_DIGESTS_XPATH =
@@ -513,6 +515,10 @@ public class HeritrixTemplate {
                  setIfFound(orderXML, HeritrixTemplate.WARCS_WRITE_METADATA_XPATH,
                          HarvesterSettings.HERITRIX_WARC_WRITE_METADATA, 
                          Settings.get(HarvesterSettings.HERITRIX_WARC_WRITE_METADATA));
+                 
+                 setIfFound(orderXML, HeritrixTemplate.WARCS_WRITE_METADATA_OUTLINKS_XPATH,
+                         HarvesterSettings.HERITRIX_WARC_WRITE_METADATA_OUTLINKS, 
+                         Settings.get(HarvesterSettings.HERITRIX_WARC_WRITE_METADATA_OUTLINKS));
 
                  setIfFound(orderXML, HeritrixTemplate.WARCS_WRITE_REQUESTS_XPATH,
                          HarvesterSettings.HERITRIX_WARC_WRITE_REQUESTS, 

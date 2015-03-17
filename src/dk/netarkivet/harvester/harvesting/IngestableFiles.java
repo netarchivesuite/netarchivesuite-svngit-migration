@@ -38,6 +38,8 @@ import dk.netarkivet.common.exceptions.ArgumentNotValid;
 import dk.netarkivet.common.exceptions.IOFailure;
 import dk.netarkivet.common.exceptions.PermissionDenied;
 import dk.netarkivet.common.utils.FileUtils;
+import dk.netarkivet.common.utils.Settings;
+import dk.netarkivet.harvester.HarvesterSettings;
 import dk.netarkivet.harvester.harvesting.metadata.MetadataFileWriter;
 
 
@@ -70,6 +72,9 @@ public class IngestableFiles {
     private boolean error = false;
 
     private String harvestnamePrefix;
+
+    public static final String METADATA_FILENAME_FORMAT =
+            Settings.get(HarvesterSettings.METADATA_FILENAME_FORMAT);
 
     private Long harvestId;
 
@@ -208,6 +213,11 @@ public class IngestableFiles {
      * @return metadata arc file as a File
      */
     protected File getMetadataFile(){
+        if("prefix".equals(METADATA_FILENAME_FORMAT)) {
+        return
+            new File(getMetadataDir(),
+                            MetadataFileWriter.getMetadataArchiveFileName(harvestnamePrefix));
+        }
         return
             new File(getMetadataDir(),
                     MetadataFileWriter.getMetadataArchiveFileName(Long.toString(jobId)));
