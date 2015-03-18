@@ -157,6 +157,12 @@ WriterPoolSettings, FetchStatusCodes, WARCConstants {
         e.setOverrideable(true);
         e.setExpertSetting(true);
         e = addElementToDefinition(
+                new SimpleType(ATTR_WRITE_METADATA_OUTLINKS,
+                "Whether to write outlinks in 'metadata' type records. " +
+                "Default is true.", new Boolean(true)));
+        e.setOverrideable(true);
+        e.setExpertSetting(true);
+        e = addElementToDefinition(
                 new SimpleType(ATTR_WRITE_REVISIT_FOR_IDENTICAL_DIGESTS,
                 "Whether to write 'revisit' type records when a URI's " +
                 "history indicates the previous fetch had an identical " +

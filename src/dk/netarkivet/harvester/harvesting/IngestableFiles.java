@@ -213,11 +213,6 @@ public class IngestableFiles {
      * @return metadata arc file as a File
      */
     protected File getMetadataFile(){
-        if("prefix".equals(METADATA_FILENAME_FORMAT)) {
-        return
-            new File(getMetadataDir(),
-                            MetadataFileWriter.getMetadataArchiveFileName(harvestnamePrefix));
-        }
         return
             new File(getMetadataDir(),
                     MetadataFileWriter.getMetadataArchiveFileName(Long.toString(jobId)));
@@ -365,7 +360,7 @@ public class IngestableFiles {
      */
     public String getHarvestnamePrefix() {
         return this.harvestnamePrefix;
-    }
+   }
     
     /**
      * @return the crawlDir of the harvest job being processed.

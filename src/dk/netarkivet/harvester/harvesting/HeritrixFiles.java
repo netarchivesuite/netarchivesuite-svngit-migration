@@ -58,7 +58,7 @@ public class HeritrixFiles {
     private final Long harvestID;
 
     /** The prefix we put on generated ARC or WARC files. */
-    private final String arcFilePrefix;
+    //private final String arcFilePrefix;
     
     /** The JMX password file to be used by Heritrix. */
     private final File jmxPasswordFile;
@@ -76,6 +76,8 @@ public class HeritrixFiles {
 
     /** The name of the index directory. */
     private File indexDir;
+    
+    private String arcFilePrefix;
 
     /** The logger. */
     private Log log = LogFactory.getLog(getClass().getName());

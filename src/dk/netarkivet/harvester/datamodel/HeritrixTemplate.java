@@ -511,7 +511,7 @@ public class HeritrixTemplate {
                          HarvesterSettings.HERITRIX_WARC_SKIP_IDENTICAL_DIGESTS, 
                          Settings.get(HarvesterSettings.HERITRIX_WARC_SKIP_IDENTICAL_DIGESTS)
                          );
-
+                 /*
                  setIfFound(orderXML, HeritrixTemplate.WARCS_WRITE_METADATA_XPATH,
                          HarvesterSettings.HERITRIX_WARC_WRITE_METADATA, 
                          Settings.get(HarvesterSettings.HERITRIX_WARC_WRITE_METADATA));
@@ -531,6 +531,7 @@ public class HeritrixTemplate {
                  setIfFound(orderXML, HeritrixTemplate.WARCS_WRITE_REVISIT_FOR_NOT_MODIFIED_XPATH,
                          HarvesterSettings.HERITRIX_WARC_WRITE_REVISIT_FOR_NOT_MODIFIED, 
                          Settings.get(HarvesterSettings.HERITRIX_WARC_WRITE_REVISIT_FOR_NOT_MODIFIED));
+                 */
 
              } else {
                  throw new IllegalState("Unable to choose WARC as Heritrix archive format because "
