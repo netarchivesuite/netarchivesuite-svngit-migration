@@ -59,6 +59,9 @@ public abstract class MetadataFileWriter {
     /** Constant representing the metadata Format. Recognized formats are either MDF_ARC
      * or MDF_WARC */
     protected static int metadataFormat = 0;
+    
+    private static final String collectionSettings = "settings.harvester.harvesting.heritrix"
+            + ".archiveNaming.collectionName";
 
     /**
      * Initialize the used metadata format from settings.  
@@ -90,14 +93,25 @@ public abstract class MetadataFileWriter {
     public static String getMetadataArchiveFileName(String jobID)
             throws ArgumentNotValid {
         ArgumentNotValid.checkNotNull(jobID, "jobID");
+        
+        //retrieving the collectionName 
+        String collectionName = "";
+        if("prefix".equals(Settings.get(HarvesterSettings.METADATA_FILENAME_FORMAT))) {
+            try {
+                collectionName = Settings.get(collectionSettings);
+            }catch(UnknownID e) {
+                //nothing
+            }
+        }
+        
         if (metadataFormat == 0) {
             initializeMetadataFormat();
         }
         switch (metadataFormat) {
         case MDF_ARC:
-            return jobID + "-metadata-" + 1 + ".arc";
+            return collectionName + "-" + jobID + "-metadata-" + 1 + ".arc";
         case MDF_WARC:
-            return jobID + "-metadata-" + 1 + ".warc";
+            return collectionName + "-" + jobID + "-metadata-" + 1 + ".warc";
         default:
             throw new ArgumentNotValid("Configuration of '"
                     + HarvesterSettings.METADATA_FORMAT + "' is invalid!");

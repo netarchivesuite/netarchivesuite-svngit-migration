@@ -84,7 +84,7 @@ public final class Constants {
     /** Major version number. */
     public static final int MAJORVERSION = 4;
     /** Minor version number. */
-    public static final int MINORVERSION = 4;
+    public static final int MINORVERSION = 5;
     /** Patch version number. */
     public static final int PATCHVERSION = 2;
     /** Current status of code. */
