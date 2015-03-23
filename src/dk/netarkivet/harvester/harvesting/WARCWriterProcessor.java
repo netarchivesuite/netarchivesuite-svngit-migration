@@ -128,6 +128,17 @@ WriterPoolSettings, FetchStatusCodes, WARCConstants {
         "write-revisit-for-not-modified";
     
     /**
+     * Key for whether to override warc parameters (default behaviour) or not (i.e. using the values in the harvest template).
+     * The concerned parameters are :
+     * write-requests, 
+     * write-metadata, 
+     * write-revisit-for-identical-digests, 
+     * write-revisit-for-not-modified
+     */
+    public static final String ATTR_WARC_PARAMETERS_OVERRIDE =
+        "warc-parameters-override";
+    
+    /**
      * Default path list.
      */
     private static final String [] DEFAULT_PATH = {"warcs"};
@@ -174,6 +185,14 @@ WriterPoolSettings, FetchStatusCodes, WARCConstants {
                 new SimpleType(ATTR_WRITE_REVISIT_FOR_NOT_MODIFIED,
                 "Whether to write 'revisit' type records when a " +
                 "304-Not Modified response is received. " +
+                "Default is true.", new Boolean(true)));
+        e.setOverrideable(true);
+        e.setExpertSetting(true);
+        
+        e = addElementToDefinition(
+                new SimpleType(ATTR_WARC_PARAMETERS_OVERRIDE,
+                "Whether to let NAS override warc parameters or" +
+                "not (i.e. using the values in harvest templates" +
                 "Default is true.", new Boolean(true)));
         e.setOverrideable(true);
         e.setExpertSetting(true);
@@ -236,7 +255,7 @@ WriterPoolSettings, FetchStatusCodes, WARCConstants {
         // can have empty content, since the "headers" don't count as content.
         String scheme = curi.getUURI().getScheme().toLowerCase();
         long recordLength = curi.getContentSize();
-        if (recordLength <= 0 && !scheme.equals("ftp")) {
+        if (recordLength <= 0 && (!scheme.equals("ftp") || !scheme.equals("sftp"))) {
             // getContentSize() should be > 0 if any material (even just
             // HTTP headers with zero-length body) is available. 
             return;
@@ -286,7 +305,7 @@ WriterPoolSettings, FetchStatusCodes, WARCConstants {
                 writeHttpRecords(w, curi, baseid, timestamp); 
             } else if (lowerCaseScheme.equals("dns")) {
                 writeDnsRecords(w, curi, baseid, timestamp);
-            } else if (lowerCaseScheme.equals("ftp")) {
+            } else if (lowerCaseScheme.equals("ftp") || lowerCaseScheme.equals("sftp")) {
                 writeFtpRecords(w, curi, baseid, timestamp); 
             } else {
                 logger.warning("No handler for scheme " + lowerCaseScheme);

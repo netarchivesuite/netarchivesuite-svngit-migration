@@ -1394,6 +1394,7 @@
         <root url="jar://$PROJECT_DIR$/lib/dk.netarkivet.wayback.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/jwat-common-0.9.1.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/wayback-core-1.7.0-SNAPSHOT.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jsch-0.1.51.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

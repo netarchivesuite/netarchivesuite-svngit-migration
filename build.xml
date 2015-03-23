@@ -103,6 +103,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
     wayback-dependencies/htmlparser-1.6.jar
     wayback-dependencies/ia-web-commons-1.0-SNAPSHOT.jar
     gagawa-1.0.1.jar
+    jsch-0.1.51.jar
     "/>
     <property name="toolclasspath" value="${jarclasspath} "/>
     <property name="build.classes.excludes" value="overview.html,*/doc-files/,*/diagram-files/,/package.html"/>
@@ -170,6 +171,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
                 <include name="wayback-dependencies/htmlparser-1.6.jar"/>
                 <include name="wayback-dependencies/ia-web-commons-1.0-SNAPSHOT.jar"/>
                 <include name="gagawa-1.0.1.jar"/>
+            	<include name="jsch-0.1.51.jar"/>
             </patternset>
         </fileset>
     </path>

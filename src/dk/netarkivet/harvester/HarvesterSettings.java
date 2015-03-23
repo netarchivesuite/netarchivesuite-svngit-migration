@@ -670,6 +670,16 @@ public class HarvesterSettings {
             "settings.harvester.harvesting.heritrix.archiveNaming.class";
     
     /**
+     * <b>settings.harvester.harvesting.heritrix.warc.writeMetadataOutlinks</b>
+     * This paramater define NAS behaviour regarding warc parameters (write request,
+     * write metadata, etc.) : if this parameter is true, the warc parameters
+     * defined in harvester templates are not considered.
+     * The default is true.
+     */
+    public static String HERITRIX_WARC_PARAMETERS_OVERRIDE = 
+            "settings.harvester.harvesting.heritrix.warc.warcParametersOverride";
+    
+    /**
      * <b>settings.harvester.harvesting.heritrix.warc.skipIdenticalDigests</b>
      * Represents the 'skip-identical-digests' setting in the Heritrix WARCWriterProcessor.
      * The default is false.
