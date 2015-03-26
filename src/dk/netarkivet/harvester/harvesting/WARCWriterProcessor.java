@@ -126,18 +126,7 @@ WriterPoolSettings, FetchStatusCodes, WARCConstants {
      */
     public static final String ATTR_WRITE_REVISIT_FOR_NOT_MODIFIED =
         "write-revisit-for-not-modified";
-    
-    /**
-     * Key for whether to override warc parameters (default behaviour) or not (i.e. using the values in the harvest template).
-     * The concerned parameters are :
-     * write-requests, 
-     * write-metadata, 
-     * write-revisit-for-identical-digests, 
-     * write-revisit-for-not-modified
-     */
-    public static final String ATTR_WARC_PARAMETERS_OVERRIDE =
-        "warc-parameters-override";
-    
+        
     /**
      * Default path list.
      */
@@ -185,14 +174,6 @@ WriterPoolSettings, FetchStatusCodes, WARCConstants {
                 new SimpleType(ATTR_WRITE_REVISIT_FOR_NOT_MODIFIED,
                 "Whether to write 'revisit' type records when a " +
                 "304-Not Modified response is received. " +
-                "Default is true.", new Boolean(true)));
-        e.setOverrideable(true);
-        e.setExpertSetting(true);
-        
-        e = addElementToDefinition(
-                new SimpleType(ATTR_WARC_PARAMETERS_OVERRIDE,
-                "Whether to let NAS override warc parameters or" +
-                "not (i.e. using the values in harvest templates" +
                 "Default is true.", new Boolean(true)));
         e.setOverrideable(true);
         e.setExpertSetting(true);

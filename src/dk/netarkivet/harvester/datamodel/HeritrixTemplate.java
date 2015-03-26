@@ -512,7 +512,7 @@ public class HeritrixTemplate {
                  
                  String warcParametersOverrideStr = null;
                  try {
-                     Settings.get(HarvesterSettings.HERITRIX_WARC_PARAMETERS_OVERRIDE);
+                     warcParametersOverrideStr = Settings.get(HarvesterSettings.HERITRIX_WARC_PARAMETERS_OVERRIDE);
                  } catch (UnknownID e) {
                      //nothing
                  }
