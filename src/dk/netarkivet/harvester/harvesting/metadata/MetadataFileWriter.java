@@ -84,21 +84,23 @@ public abstract class MetadataFileWriter {
      * a given job.
      *
      * @param jobID The number of the job that generated the archive file.
+     * @param harvestID the harvest ID of the job. Can be null.
      * @return A "flat" file name (i.e. no path) containing the jobID parameter
      * and ending on "-metadata-N.(w)arc", where N is the serial number of the
      * metadata files for this job, e.g. "42-metadata-1.(w)arc".  Currently,
      * only one file is ever made.
      * @throws ArgumentNotValid if any parameter was null.
      */
-    public static String getMetadataArchiveFileName(String jobID)
+    public static String getMetadataArchiveFileName(String jobID, Long harvestID)
             throws ArgumentNotValid {
         ArgumentNotValid.checkNotNull(jobID, "jobID");
-        
         //retrieving the collectionName 
         String collectionName = "";
+        boolean isPrefix = false;
         if("prefix".equals(Settings.get(HarvesterSettings.METADATA_FILENAME_FORMAT))) {
             try {
                 collectionName = Settings.get(collectionSettings);
+                isPrefix = true;
             }catch(UnknownID e) {
                 //nothing
             }
@@ -109,9 +111,19 @@ public abstract class MetadataFileWriter {
         }
         switch (metadataFormat) {
         case MDF_ARC:
-            return collectionName + "-" + jobID + "-metadata-" + 1 + ".arc";
+            if(isPrefix) {
+                return collectionName + "-" + jobID + "-" + harvestID + "-metadata-" + 1 + ".arc";
+            } else {
+                return jobID + "-metadata-" + 1 + ".arc";
+            }
+
         case MDF_WARC:
-            return collectionName + "-" + jobID + "-metadata-" + 1 + ".warc";
+            if(isPrefix) {
+                return collectionName + "-" + jobID + "-" + harvestID + "-metadata-" + 1 + ".warc";              
+            } else {
+                return jobID + "-metadata-" + 1 + ".warc";
+            }
+
         default:
             throw new ArgumentNotValid("Configuration of '"
                     + HarvesterSettings.METADATA_FORMAT + "' is invalid!");

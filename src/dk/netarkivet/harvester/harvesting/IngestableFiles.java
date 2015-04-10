@@ -215,7 +215,7 @@ public class IngestableFiles {
     protected File getMetadataFile(){
         return
             new File(getMetadataDir(),
-                    MetadataFileWriter.getMetadataArchiveFileName(Long.toString(jobId)));
+                    MetadataFileWriter.getMetadataArchiveFileName(Long.toString(jobId), harvestId));
     }
 
     /**
@@ -234,7 +234,7 @@ public class IngestableFiles {
     private File getTmpMetadataFile(){
         return
             new File(getTmpMetadataDir(),
-                    MetadataFileWriter.getMetadataArchiveFileName(Long.toString(jobId)));
+                    MetadataFileWriter.getMetadataArchiveFileName(Long.toString(jobId), harvestId));
     }
 
     /** Get a list of all ARC files that should get ingested.  Any open files
