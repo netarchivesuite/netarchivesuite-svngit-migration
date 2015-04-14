@@ -122,7 +122,7 @@ public class Reporting {
                 return ArchiveBatchFilter.EXCLUDE_NON_WARCINFO_RECORDS;
             }
         };
-        cdxJob.processOnlyFilesMatching(".*"+jobid + ".*"  + metadatafile_suffix);
+        cdxJob.processOnlyFilesMatching(".*"+jobid + ".*" + metadatafile_suffix);
         
         File f;
         try {

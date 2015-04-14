@@ -146,7 +146,7 @@ public class GetDataResolver extends CommandResolver {
             try {
                 Long id = Long.parseLong(idString);
                 FileBatchJob job = new GetFileBatchJob();
-                job.processOnlyFilesMatching(".*"+id
+                job.processOnlyFilesMatching(".*"+id+".*"
                         + Constants.METADATA_FILE_PATTERN_SUFFIX);
                 BatchStatus b = client.batch(job, Settings.get(
                         CommonSettings.USE_REPLICA_ID));
