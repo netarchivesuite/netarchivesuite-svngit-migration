@@ -126,7 +126,7 @@ WriterPoolSettings, FetchStatusCodes, WARCConstants {
      */
     public static final String ATTR_WRITE_REVISIT_FOR_NOT_MODIFIED =
         "write-revisit-for-not-modified";
-        
+
     /**
      * Default path list.
      */

@@ -31,7 +31,6 @@ import org.archive.crawler.deciderules.MatchesListRegExpDecideRule;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.Node;
-
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.List;

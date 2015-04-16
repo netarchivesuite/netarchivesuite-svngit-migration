@@ -360,7 +360,7 @@ public class IngestableFiles {
      */
     public String getHarvestnamePrefix() {
         return this.harvestnamePrefix;
-   }
+    }
     
     /**
      * @return the crawlDir of the harvest job being processed.
