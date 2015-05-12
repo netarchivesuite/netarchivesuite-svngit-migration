@@ -792,6 +792,17 @@ public class Job implements Serializable, JobInfo {
             URL uri = new URL(url);
             return DomainUtils.domainNameFromHostname(uri.getHost());
         } catch (MalformedURLException e) {
+            //java.net.URL doesn't support sftp protocol
+            //if URL start with sftp, we consider it as a ftp URL
+            if(url.startsWith("sftp")) {
+                try {
+                    URL uri = new URL(url.substring(1));
+                    return DomainUtils.domainNameFromHostname(uri.getHost());
+                } catch (MalformedURLException e1) {
+                    throw new ArgumentNotValid("The string '" + url
+                            + "' is not a valid URL");
+                }
+            }
             throw new ArgumentNotValid("The string '" + url
                     + "' is not a valid URL");
         }

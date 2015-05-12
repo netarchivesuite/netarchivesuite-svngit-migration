@@ -125,7 +125,7 @@ public class HarvestDocumentationTester extends TestCase {
         HarvestDocumentation.documentHarvest(inf);
              
         //Verify that the new file exists.
-        MetadataFileWriter.getMetadataArchiveFileName(TestInfo.ARC_JOB_ID);
+        MetadataFileWriter.getMetadataArchiveFileName(TestInfo.ARC_JOB_ID, TestInfo.HARVEST_ID);
         
         List<File> fs = inf.getMetadataArcFiles();
         assertEquals("Should have created exactly one file ", 1, fs.size());
@@ -221,7 +221,7 @@ public class HarvestDocumentationTester extends TestCase {
         File metadataDir = new File(TestInfo.WORKING_DIR, "metadata");
         File target1 = new File(
                 metadataDir, MetadataFileWriter.getMetadataArchiveFileName(
-                        Long.toString(TestInfo.JOB_ID)));
+                        Long.toString(TestInfo.JOB_ID), TestInfo.HARVEST_ID));
         assertEquals("Should generate exactly one metadata file",
                      1, metadataFiles.size());
         assertTrue("Should generate file " + target1
@@ -236,13 +236,14 @@ public class HarvestDocumentationTester extends TestCase {
      */
     public void testGetMetadataARCFileName() {
         String job = "7";
+        Long harvestId = 43L;
         try {
-            MetadataFileWriter.getMetadataArchiveFileName((String)null);
+            MetadataFileWriter.getMetadataArchiveFileName((String)null, null);
             fail("Should have thrown ArgumentNotValid");
         } catch (ArgumentNotValid e) {
             //Expected
         }
-        String fn = MetadataFileWriter.getMetadataArchiveFileName(job);
+        String fn = MetadataFileWriter.getMetadataArchiveFileName(job, harvestId);
         assertTrue("File name should end on '-1.arc' - was " + fn,
                    fn.endsWith("-1.arc")
         );
@@ -527,7 +528,7 @@ public class HarvestDocumentationTester extends TestCase {
         
         String metadataDirPath = new File(TestInfo.WORKING_DIR, 
                 IngestableFiles.METADATA_SUB_DIR).getAbsolutePath();
-        String filename = MetadataFileWriter.getMetadataArchiveFileName(""+ TestInfo.JOB_ID);
+        String filename = MetadataFileWriter.getMetadataArchiveFileName(""+ TestInfo.JOB_ID, TestInfo.HARVEST_ID);
         
         FileAsserts.assertFileContains(
                 "Should have issued warning about existing metadata-arcfile",

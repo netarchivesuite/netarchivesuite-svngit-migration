@@ -41,6 +41,7 @@ import dk.netarkivet.common.exceptions.ArgumentNotValid;
 import dk.netarkivet.common.exceptions.IOFailure;
 import dk.netarkivet.common.exceptions.IllegalState;
 import dk.netarkivet.common.exceptions.PermissionDenied;
+import dk.netarkivet.common.exceptions.UnknownID;
 import dk.netarkivet.common.utils.Settings;
 import dk.netarkivet.common.utils.XmlUtils;
 import dk.netarkivet.harvester.HarvesterSettings;
@@ -196,6 +197,8 @@ public class HeritrixTemplate {
     		WARCWRITERPROCESSOR_XPATH + "/boolean[@name='write-requests']";
     public static final String WARCS_WRITE_METADATA_XPATH =
     		WARCWRITERPROCESSOR_XPATH + "/boolean[@name='write-metadata']";
+    public static final String WARCS_WRITE_METADATA_OUTLINKS_XPATH =
+            WARCWRITERPROCESSOR_XPATH + "/boolean[@name='write-metadata-outlinks']";
     public static final String WARCS_SKIP_IDENTICAL_DIGESTS_XPATH =
     		WARCWRITERPROCESSOR_XPATH + "/boolean[@name='skip-identical-digests']";
     public static final String WARCS_WRITE_REVISIT_FOR_IDENTICAL_DIGESTS_XPATH =
@@ -503,28 +506,45 @@ public class HeritrixTemplate {
                  if (orderXML.selectSingleNode(HeritrixTemplate.ARCS_ENABLED_XPATH) != null) {
                      XmlUtils.setNode(orderXML, HeritrixTemplate.ARCS_ENABLED_XPATH, "false");
                  }
-
-                 // Update the WARCWriterProcessorSettings with settings values
-                 setIfFound(orderXML, HeritrixTemplate.WARCS_SKIP_IDENTICAL_DIGESTS_XPATH,
-                         HarvesterSettings.HERITRIX_WARC_SKIP_IDENTICAL_DIGESTS, 
-                         Settings.get(HarvesterSettings.HERITRIX_WARC_SKIP_IDENTICAL_DIGESTS)
-                         );
-
-                 setIfFound(orderXML, HeritrixTemplate.WARCS_WRITE_METADATA_XPATH,
-                         HarvesterSettings.HERITRIX_WARC_WRITE_METADATA, 
-                         Settings.get(HarvesterSettings.HERITRIX_WARC_WRITE_METADATA));
-
-                 setIfFound(orderXML, HeritrixTemplate.WARCS_WRITE_REQUESTS_XPATH,
-                         HarvesterSettings.HERITRIX_WARC_WRITE_REQUESTS, 
-                         Settings.get(HarvesterSettings.HERITRIX_WARC_WRITE_REQUESTS));
-
-                 setIfFound(orderXML, HeritrixTemplate.WARCS_WRITE_REVISIT_FOR_IDENTICAL_DIGESTS_XPATH,
-                         HarvesterSettings.HERITRIX_WARC_WRITE_REVISIT_FOR_IDENTICAL_DIGESTS, 
-                         Settings.get(HarvesterSettings.HERITRIX_WARC_WRITE_REVISIT_FOR_IDENTICAL_DIGESTS)
-                         );  
-                 setIfFound(orderXML, HeritrixTemplate.WARCS_WRITE_REVISIT_FOR_NOT_MODIFIED_XPATH,
-                         HarvesterSettings.HERITRIX_WARC_WRITE_REVISIT_FOR_NOT_MODIFIED, 
-                         Settings.get(HarvesterSettings.HERITRIX_WARC_WRITE_REVISIT_FOR_NOT_MODIFIED));
+                 
+                 //if the parameter is not found or if it exists and equals to true
+                 
+                 String warcParametersOverrideStr = null;
+                 try {
+                     warcParametersOverrideStr = Settings.get(HarvesterSettings.HERITRIX_WARC_PARAMETERS_OVERRIDE);
+                 } catch (UnknownID e) {
+                     //nothing
+                 }
+                 if (warcParametersOverrideStr == null || (warcParametersOverrideStr != null
+                         && "true".equals(warcParametersOverrideStr))) {
+ 
+                     // Update the WARCWriterProcessorSettings with settings values
+                     setIfFound(orderXML, HeritrixTemplate.WARCS_SKIP_IDENTICAL_DIGESTS_XPATH,
+                             HarvesterSettings.HERITRIX_WARC_SKIP_IDENTICAL_DIGESTS, 
+                             Settings.get(HarvesterSettings.HERITRIX_WARC_SKIP_IDENTICAL_DIGESTS)
+                             );
+                     
+                     setIfFound(orderXML, HeritrixTemplate.WARCS_WRITE_METADATA_XPATH,
+                             HarvesterSettings.HERITRIX_WARC_WRITE_METADATA, 
+                             Settings.get(HarvesterSettings.HERITRIX_WARC_WRITE_METADATA));
+                     
+                     setIfFound(orderXML, HeritrixTemplate.WARCS_WRITE_METADATA_OUTLINKS_XPATH,
+                             HarvesterSettings.HERITRIX_WARC_WRITE_METADATA_OUTLINKS, 
+                             Settings.get(HarvesterSettings.HERITRIX_WARC_WRITE_METADATA_OUTLINKS));
+    
+                     setIfFound(orderXML, HeritrixTemplate.WARCS_WRITE_REQUESTS_XPATH,
+                             HarvesterSettings.HERITRIX_WARC_WRITE_REQUESTS, 
+                             Settings.get(HarvesterSettings.HERITRIX_WARC_WRITE_REQUESTS));
+    
+                     setIfFound(orderXML, HeritrixTemplate.WARCS_WRITE_REVISIT_FOR_IDENTICAL_DIGESTS_XPATH,
+                             HarvesterSettings.HERITRIX_WARC_WRITE_REVISIT_FOR_IDENTICAL_DIGESTS, 
+                             Settings.get(HarvesterSettings.HERITRIX_WARC_WRITE_REVISIT_FOR_IDENTICAL_DIGESTS)
+                             );  
+                     setIfFound(orderXML, HeritrixTemplate.WARCS_WRITE_REVISIT_FOR_NOT_MODIFIED_XPATH,
+                             HarvesterSettings.HERITRIX_WARC_WRITE_REVISIT_FOR_NOT_MODIFIED, 
+                             Settings.get(HarvesterSettings.HERITRIX_WARC_WRITE_REVISIT_FOR_NOT_MODIFIED));
+                 
+                 }
 
              } else {
                  throw new IllegalState("Unable to choose WARC as Heritrix archive format because "
